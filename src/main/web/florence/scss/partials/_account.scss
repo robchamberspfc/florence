@@ -1,0 +1,105 @@
+.account {
+
+    &__button {
+        border-radius: 0;
+        color: $gray-chateau;
+        margin: 0;
+        padding: $lineheight $gutter;
+        font-family: 'Open Sans', sans-serif;
+
+        background-color: transparent;
+        //background-color: $mine-shaft;
+        //animation: default-color 1.8s ease forwards;
+
+        &.selected {
+            color: $white;
+            //animation: selected-color 0.1s ease forwards;
+        }
+
+        // Disabled default button hover/focus states
+        &:hover:after,
+        &:focus:after {
+            border-radius: 0;
+            background-color: transparent;
+        }
+    }
+
+    &__container {
+        overflow: hidden;
+        display: none; // Stop animation on load, JS removes this on click of the account button
+        animation: slide-up 0.8s ease forwards;
+
+        &.selected {
+            animation: slide-down 0.8s ease forwards;
+
+            &:after {
+                transition: border-bottom 0.1s linear 0s;
+                border-bottom: 15px solid $emperor;
+            }
+        }
+
+        &:after {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: $gutter * 2;
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+
+            transition: border-bottom 0.1s linear 0.6s;
+        }
+    }
+
+    &__list {
+        list-style: none;
+        background-color: $emperor;
+        padding-left: $gutter;
+        font-size: 13px;
+    }
+
+    &__item {
+        display: inline-block;
+        position: relative;
+        color: $iron;
+
+        a {
+            display: block;
+            color: $iron;
+            text-decoration: none;
+        }
+
+        &--trigger {
+            list-style: none;
+            float: left;
+            position: relative;
+            margin: 0;
+        }
+    }
+}
+
+// Slow reveal animation
+@keyframes slide-down
+{
+    from {display: none; height: 0;}
+    to {display: block; height: ($lineheight * 6);}
+}
+
+@keyframes slide-up
+{
+    from {display: block; height: ($lineheight * 6);}
+    to {display: none; height: 0;}
+}
+
+// Selected button colour animation
+@keyframes default-color {
+    from {background-color: $emperor;}
+    to {background-color: $mine-shaft;}
+}
+
+@keyframes selected-color {
+    from {background-color: $mine-shaft;}
+    to {background-color: $emperor;}
+}

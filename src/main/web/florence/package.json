@@ -12,8 +12,8 @@
         "node-sass": "latest"
     },
     "scripts": {
-        "watch-js": "npm run build-js && watch-run -p 'js/classes/*.js,js/functions/*.js' npm run build-js ",
-        "build-js": "cat js/classes/*.js js/functions/*.js > js/main.js",
+        "watch-js": "npm run build-js && watch-run -p 'js/classes/*.js,js/functions/*.js,js/ui/*.js' npm run build-js ",
+        "build-js": "cat js/classes/*.js js/functions/*.js js/ui/*.js > js/main.js",
         "watch-templates": "npm run build-templates && watch-run -p 'templates/*.handlebars' npm run build-templates ",
         "build-templates": "handlebars templates/*.handlebars --output js/templates.js",
         "watch-css": "npm run build-css && watch-run -p 'scss/partials/*.scss' npm run build-css ",

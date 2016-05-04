@@ -1,25 +1,38 @@
 <ul class="nav nav--admin">
-    <li id="network-status" class="icon-status">
-        <div class="icon-status--very-poor"></div>
-        <div class="icon-status--poor"></div>
-        <div class="icon-status--ok"></div>
-        <div class="icon-status--good"></div>
-    </li>
-  {{#if this.Authentication.isAuthenticated}}
-    {{#if this.collection.name}}
-      <li id="working-on" class="nav--admin__item nav--admin__item--collection selected"><a href="#">Working on: {{this.collection.name}}</a></li>
+    {{!-- <li id="network-status" class="icon-status">
+         <div class="icon-status--very-poor"></div>
+         <div class="icon-status--poor"></div>
+         <div class="icon-status--ok"></div>
+         <div class="icon-status--good"></div>
+     </li> --}}
+    {{#if this.Authentication.isAuthenticated}}
+        <li class="account__item--trigger js-account">
+            <button id="account-trigger" class="account__button">My account{{!-- {{this.Authentication.loggedInEmail}} --}}</button>
+        </li>
+
+        {{#if this.collection.name}}
+            <li id="working-on" class="nav--admin__item js-nav__item js-nav__item--collection selected"><a class="nav--admin__link" href="#">Working
+                on: {{this.collection.name}}</a></li>
+        {{/if}}
+        <li class="nav--admin__item js-nav__item js-nav__item--collections {{#if this.Authentication.isAuthenticated}}{{#unless this.collection.name}}selected{{/unless}}{{/if}}">
+            <a class="nav--admin__link" href="javascript:void(0)">Collections</a></li>
+        <li class="nav--admin__item js-nav__item js-nav__item--publish"><a class="nav--admin__link" href="javascript:void(0)">Publishing queue</a></li>
+        <li class="nav--admin__item js-nav__item js-nav__item--reports"><a class="nav--admin__link" href="javascript:void(0)">Reports</a></li>
+
+        <li class="nav--admin__item js-nav__item js-nav__item--users"><a class="nav--admin__link" href="javascript:void(0)">Users and access</a></li>
+        <li class="nav--admin__item js-nav__item js-nav__item--teams"><a class="nav--admin__link" href="javascript:void(0)">Teams</a></li>
+    {{else}}
+        <li class="nav--admin__item js-nav__item js-nav__item--login selected"><a class="nav--admin__link" href="javascript:void(0)">Login</a></li>
     {{/if}}
-
-    <li class="nav--admin__item nav--admin__item--collections {{#if this.Authentication.isAuthenticated}}{{#unless this.collection.name}}selected{{/unless}}{{/if}}">
-    <a href="#">Collections</a></li>
-    <li class="nav--admin__item nav--admin__item--publish"><a href="#">Publishing queue</a></li>
-    <li class="nav--admin__item nav--admin__item--reports"><a href="#">Reports</a></li>
-
-    <li class="nav--admin__item nav--admin__item--users"><a href="#">Users and access</a></li>
-    <li class="nav--admin__item nav--admin__item--teams"><a href="#">Teams</a></li>
-
-    <li class="nav--admin__item nav--admin__item--logout"><a href="#">Logout</a></li>
-  {{else}}
-    <li class="nav--admin__item nav--admin__item--login selected"><a href="#">Login</a></li>
-  {{/if}}
 </ul>
+
+{{!-- Outside of <li> so that we don't have the problem of the nav container stopping the drop-down from showing --}}
+<div id="account-menu" class="account__container">
+    <ul class="account__list">
+        {{#if_eq (this.Authentication.permission) "admin"}}
+            <li class="account__item"><a id="load-admin" href="javascript:void(0)">Admin screen</a></li>
+        {{/if_eq}}
+        <li class="account__item" id="change-password">Change my password</li>
+        <li class="account__item" id="logout"><a href="javascript:void(0)">Logout</a></li>
+    </ul>
+</div>

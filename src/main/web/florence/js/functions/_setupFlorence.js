@@ -14,77 +14,77 @@ function setupFlorence() {
     });
     Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
 
-    switch (operator) {
-      case '==':
-        return (v1 == v2) ? options.fn(this) : options.inverse(this);
-      case '===':
-        return (v1 === v2) ? options.fn(this) : options.inverse(this);
-      case '<':
-        return (v1 < v2) ? options.fn(this) : options.inverse(this);
-      case '<=':
-        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-      case '>':
-        return (v1 > v2) ? options.fn(this) : options.inverse(this);
-      case '>=':
-        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-      case '&&':
-        return (v1 && v2) ? options.fn(this) : options.inverse(this);
-      case '||':
-        return (v1 || v2) ? options.fn(this) : options.inverse(this);
-      default:
+        switch (operator) {
+            case '==':
+                return (v1 == v2) ? options.fn(this) : options.inverse(this);
+            case '===':
+                return (v1 === v2) ? options.fn(this) : options.inverse(this);
+            case '<':
+                return (v1 < v2) ? options.fn(this) : options.inverse(this);
+            case '<=':
+                return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+            case '>':
+                return (v1 > v2) ? options.fn(this) : options.inverse(this);
+            case '>=':
+                return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+            case '&&':
+                return (v1 && v2) ? options.fn(this) : options.inverse(this);
+            case '||':
+                return (v1 || v2) ? options.fn(this) : options.inverse(this);
+            default:
+                return options.inverse(this);
+        }
+    });
+    //Check if array contains element
+    Handlebars.registerHelper('ifContains', function (elem, list, options) {
+        if (list.indexOf(elem) > -1) {
+            return options.fn(this);
+        }
         return options.inverse(this);
-    }
-  });
-  //Check if array contains element
-  Handlebars.registerHelper('ifContains', function(elem, list, options) {
-    if(list.indexOf(elem) > -1) {
-      return options.fn(this);
-    }
-    return options.inverse(this);
-  });
-  // Add two values together. Primary usage was '@index + 1' to create numbered lists
-  Handlebars.registerHelper('plus', function(value1, value2) {
-    return value1 + value2;
-  });
-  // Add two values together. Primary usage was '@index + 1' to create numbered lists
-  Handlebars.registerHelper('lastEditedBy', function(array) {
-    if(array) {
-      var event = array[array.length - 1];
-      if (event) {
-        return 'Last edited ' + StringUtils.formatIsoDateString(new Date(event.date)) + " by " + event.email;
-      }
-    }
-    return '';
-  });
-  Handlebars.registerHelper('createdBy', function(array) {
-    if(array) {
-      var event = getCollectionCreatedEvent(array);
-      if (event) {
-        return 'Created ' + StringUtils.formatIsoDateString(new Date(event.date)) + " by " + event.email + '';
-      } else {
+    });
+    // Add two values together. Primary usage was '@index + 1' to create numbered lists
+    Handlebars.registerHelper('plus', function (value1, value2) {
+        return value1 + value2;
+    });
+    // Add two values together. Primary usage was '@index + 1' to create numbered lists
+    Handlebars.registerHelper('lastEditedBy', function (array) {
+        if (array) {
+            var event = array[array.length - 1];
+            if (event) {
+                return 'Last edited ' + StringUtils.formatIsoDateString(new Date(event.date)) + " by " + event.email;
+            }
+        }
+        return '';
+    });
+    Handlebars.registerHelper('createdBy', function (array) {
+        if (array) {
+            var event = getCollectionCreatedEvent(array);
+            if (event) {
+                return 'Created ' + StringUtils.formatIsoDateString(new Date(event.date)) + " by " + event.email + '';
+            } else {
+                return "";
+            }
+        }
         return "";
-      }
-    }
-    return "";
-  });
-  Handlebars.registerHelper('if_eq', function(a, b, opts) {
-    if(a == b)
-      return opts.fn(this);
-    else
-      return opts.inverse(this);
-  });
+    });
+    Handlebars.registerHelper('if_eq', function (a, b, opts) {
+        if (a == b)
+            return opts.fn(this);
+        else
+            return opts.inverse(this);
+    });
 
-  Handlebars.registerHelper('comma_separated_list', function(array) {
-    var asString = "";
+    Handlebars.registerHelper('comma_separated_list', function (array) {
+        var asString = "";
 
-    if (array) {
-        array.forEach(function(item) {
-            asString = asString + item + ", ";
-        });
-        return asString.substring(0, asString.lastIndexOf(","));
-    }
-    return asString;
-  });
+        if (array) {
+            array.forEach(function (item) {
+                asString = asString + item + ", ";
+            });
+            return asString.substring(0, asString.lastIndexOf(","));
+        }
+        return asString;
+    });
 
 
     Florence.globalVars.activeTab = false;
@@ -97,7 +97,7 @@ function setupFlorence() {
 
     var adminMenu = $('.admin-nav');
     // dirty checks on admin menu
-    adminMenu.on('click', '.nav--admin__item', function () {
+    adminMenu.on('click', '.js-nav__item', function () {
         if (Florence.Editor.isDirty) {
             swal({
                 title: "Warning",
@@ -132,32 +132,28 @@ function setupFlorence() {
     function processMenuClick(clicked) {
         Florence.collection = {};
 
-        $('.nav--admin__item--collection').hide();
-        $('.nav--admin__item').removeClass('selected');
+        $('.js-nav__item--collection').hide();
+        $('.js-nav__item').removeClass('selected');
         var menuItem = $(clicked);
 
         menuItem.addClass('selected');
 
-
-        if (menuItem.hasClass("nav--admin__item--collections")) {
+        if (menuItem.hasClass("js-nav__item--collections")) {
             viewController('collections');
-        } else if (menuItem.hasClass("nav--admin__item--collection")) {
+        } else if (menuItem.hasClass("js-nav__item--collection")) {
             var thisCollection = CookieUtils.getCookieValue("collection");
             viewCollections(thisCollection);
-            $(".nav--admin__item--collections").addClass('selected');
-        } else if (menuItem.hasClass("nav--admin__item--users")) {
+            $(".js-nav__item--collections").addClass('selected');
+        } else if (menuItem.hasClass("js-nav__item--users")) {
             viewController('users');
-        } else if (menuItem.hasClass("nav--admin__item--teams")) {
+        } else if (menuItem.hasClass("js-nav__item--teams")) {
             viewController('teams');
-        } else if (menuItem.hasClass("nav--admin__item--publish")) {
+        } else if (menuItem.hasClass("js-nav__item--publish")) {
             viewController('publish');
-        } else if (menuItem.hasClass("nav--admin__item--reports")) {
+        } else if (menuItem.hasClass("js-nav__item--reports")) {
             viewController('reports');
-        } else if (menuItem.hasClass("nav--admin__item--login")) {
+        } else if (menuItem.hasClass("js-nav__item--login")) {
             viewController('login');
-        } else if (menuItem.hasClass("nav--admin__item--logout")) {
-            logout();
-            viewController();
         }
     }
 

@@ -7,19 +7,19 @@
  */
 function getUserPermission(success, error, userId) {
 
-  var url = "/zebedee/permission?email=" + userId;
+    var url = "/zebedee/permission?email=" + userId;
 
 
-  return $.ajax({
-    url: url,
-    dataType: 'json',
-    type: 'GET',
-    success: function (response) {
-      success(response);
-    },
-    error: function (response) {
-      error(response);
-    }
-  });
+    return $.ajax({
+        url: url,
+        dataType: 'json',
+        type: 'GET',
+        success: function (response) {
+            success(response);
+        },
+        error: function (response) {
+            error(response);
+        }
+    });
 }
 

@@ -4,6 +4,7 @@ var Florence = Florence || {
         refreshAdminMenu: function () {
             var mainNavHtml = templates.mainNav(Florence);
             $('.admin-nav').html(mainNavHtml);
+            myAccountUI(); // Bind UI events for account actions
         },
         setActiveCollection: function (collection) {
             document.cookie = "collection=" + collection.id + ";path=/";
@@ -46,6 +47,9 @@ Florence.Authentication = {
     },
     loggedInEmail: function () {
         return localStorage.getItem("loggedInAs");
+    },
+    permission: function() {
+        return localStorage.getItem("userPermissions");
     }
 };
 

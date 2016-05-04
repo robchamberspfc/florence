@@ -4,7 +4,8 @@
         height: auto;
         text-align: left;
 
-        li {
+        &__item {
+            position: relative;
             margin-top: 0;
             margin-bottom: 0;
             margin-left: -$gutter;
@@ -13,17 +14,6 @@
             display: block;
             overflow: hidden;
             font-size: 12px;
-
-            &:after {
-                content: '';
-                position: absolute;
-                right: $gutter / 2;
-                top: $lineheight / 2;
-                width: 30px;
-                height: $lineheight * 2;
-                background: transparent url(../img/sprite.png);
-                background-size: 30px auto;
-            }
 
             &.selected {
                 background-color: $mirage;
@@ -41,6 +31,32 @@
                     border-bottom: 10px solid transparent;
                     border-right: 10px solid $quill-gray;
                 }
+            }
+
+            &--icon {
+                &:after {
+                    content: '';
+                    position: absolute;
+                    right: $gutter / 2;
+                    top: $lineheight / 2;
+                    width: 30px;
+                    height: $lineheight * 2;
+                    background: transparent url(../img/sprite.png);
+                    background-size: 30px auto;
+                }
+            }
+        }
+
+        &__link {
+            color: $gray-chateau;
+            text-decoration: none;
+        }
+
+        &__lang {
+            a{
+                color: $gray-chateau;
+                text-decoration: none;
+                font-size: 14px;
             }
         }
 
@@ -118,7 +134,7 @@
             border-bottom-left-radius: 4px;
         }
 
-        input {
+        input:not(.full) {
             margin-left: 25%;
             width: 75%;
             border-bottom-left-radius: 0;
@@ -135,9 +151,7 @@
         box-sizing: border-box;
         overflow-y: scroll;
         background-color: $quill-gray;
-        // padding-bottom: $lineheight * 4;
         height: $lineheight * 35;
-        // position: relative;
 
         h1 {
             margin-top: 0;

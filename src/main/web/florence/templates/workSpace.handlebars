@@ -1,12 +1,11 @@
 <nav class="panel col col--1 workspace-nav">
-  <ul class="nav nav--workspace">
-    <div id="nav--workspace__welsh" style="margin-top: 20px;"></div>
-      <br/>
-    <li class="nav--workspace__browse selected" id="browse"><a href="#">Browse</a></li>
-    <li class="nav--workspace__create" id="create"><a href="#">Create</a></li>
-    <li class="nav--workspace__edit" id="edit"><a href="#">Edit</a></li>
-    <li class="nav--workspace__import" id="import"><a href="#">Import</a></li>
-  </ul>
+    <ul class="nav nav--workspace">
+        <div class="nav--workspace__item nav--workspace__lang" id="nav--workspace__welsh"></div>
+        <li class="nav--workspace__item nav--workspace__item--icon nav--workspace__browse selected" id="browse"><a class="nav--workspace__link" href="#">Browse</a></li>
+        <li class="nav--workspace__item nav--workspace__item--icon nav--workspace__create" id="create"><a class="nav--workspace__link" href="#">Create</a></li>
+        <li class="nav--workspace__item nav--workspace__item--icon nav--workspace__edit" id="edit"><a class="nav--workspace__link" href="#">Edit</a></li>
+        <li class="nav--workspace__item nav--workspace__import" id="import"><a class="nav--workspace__link" href="#">Import</a></li>
+    </ul>
 </nav>
 <div class="col col--4 workspace-menu" id="browse-tree">
     {{> loadingAnimation large=true}}

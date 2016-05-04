@@ -18,15 +18,21 @@ function postLogin(email, password) {
         success: function (response) {
             document.cookie = "access_token=" + response + ";path=/";
             localStorage.setItem("loggedInAs", email);
-            Florence.refreshAdminMenu();
             getUserPermission(
                 function (permission) {
-                    if (permission.admin || permission.editor) {
+                    if (permission.admin) {
                         viewController();
-                    } else {
+                        localStorage.setItem("userPermissions", 'admin');
+                    } else if (permission.editor) {
+                        viewController();
+                        localStorage.setItem("userPermissions", 'editor');
+                    }
+                    else {
                         logout();
                         sweetAlert("You do not have the permissions to enter here. Please contact an administrator");
                     }
+
+                    Florence.refreshAdminMenu();
                 },
                 function (error) {
                     logout();
