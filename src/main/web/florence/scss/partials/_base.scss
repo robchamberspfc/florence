@@ -783,6 +783,21 @@ button {
         background-color: $tawny-port;
     }
 
+    &--plain {
+        font-family: 'Open Sans', sans-serif;
+        color: inherit;
+        background-color: transparent;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        text-decoration: none;
+
+        &:hover:after,
+        &focus:after {
+            display: none;
+        }
+    }
+
     &--flush {
         margin: 0;
     }
