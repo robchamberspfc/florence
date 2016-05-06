@@ -1,9 +1,14 @@
 // The florence object is used for storing application state.
 var Florence = Florence || {
         tredegarBaseUrl: window.location.origin,
-        refreshAdminMenu: function () {
+        refreshPublisherMenu: function () {
             var mainNavHtml = templates.mainNav(Florence);
             $('.admin-nav').html(mainNavHtml);
+            myAccountUI(); // Bind UI events for account actions
+        },
+        refreshAdminMenu: function() {
+            var adminNavHtml = templates.adminNav(Florence);
+            $('.admin-nav').html(adminNavHtml);
             myAccountUI(); // Bind UI events for account actions
         },
         setActiveCollection: function (collection) {

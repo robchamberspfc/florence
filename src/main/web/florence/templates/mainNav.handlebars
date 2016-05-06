@@ -1,4 +1,4 @@
-<ul class="nav nav--admin">
+<ul class="nav nav--main">
     {{!-- <li id="network-status" class="icon-status">
          <div class="icon-status--very-poor"></div>
          <div class="icon-status--poor"></div>
@@ -11,28 +11,20 @@
         </li>
 
         {{#if this.collection.name}}
-            <li id="working-on" class="nav--admin__item js-nav__item js-nav__item--collection selected"><a class="nav--admin__link" href="#">Working
+            <li id="working-on" class="nav--main__item js-nav__item js-nav__item--collection selected"><a class="nav--main__link" href="#">Working
                 on: {{this.collection.name}}</a></li>
         {{/if}}
-        <li class="nav--admin__item js-nav__item js-nav__item--collections {{#if this.Authentication.isAuthenticated}}{{#unless this.collection.name}}selected{{/unless}}{{/if}}">
-            <a class="nav--admin__link" href="javascript:void(0)">Collections</a></li>
-        <li class="nav--admin__item js-nav__item js-nav__item--publish"><a class="nav--admin__link" href="javascript:void(0)">Publishing queue</a></li>
-        <li class="nav--admin__item js-nav__item js-nav__item--reports"><a class="nav--admin__link" href="javascript:void(0)">Reports</a></li>
+        <li class="nav--main__item js-nav__item js-nav__item--collections {{#if this.Authentication.isAuthenticated}}{{#unless this.collection.name}}selected{{/unless}}{{/if}}">
+            <a class="nav--main__link" href="javascript:void(0)">Collections</a></li>
+        <li class="nav--main__item js-nav__item js-nav__item--publish"><a class="nav--main__link" href="javascript:void(0)">Publishing queue</a></li>
+        <li class="nav--main__item js-nav__item js-nav__item--reports"><a class="nav--main__link" href="javascript:void(0)">Reports</a></li>
 
-        <li class="nav--admin__item js-nav__item js-nav__item--users"><a class="nav--admin__link" href="javascript:void(0)">Users and access</a></li>
-        <li class="nav--admin__item js-nav__item js-nav__item--teams"><a class="nav--admin__link" href="javascript:void(0)">Teams</a></li>
+        <li class="nav--main__item js-nav__item js-nav__item--users"><a class="nav--main__link" href="javascript:void(0)">Users and access</a></li>
+        <li class="nav--main__item js-nav__item js-nav__item--teams"><a class="nav--main__link" href="javascript:void(0)">Teams</a></li>
     {{else}}
-        <li class="nav--admin__item js-nav__item js-nav__item--login selected"><a class="nav--admin__link" href="javascript:void(0)">Login</a></li>
+        <li class="nav--main__item js-nav__item js-nav__item--login selected"><a class="nav--main__link" href="javascript:void(0)">Login</a></li>
     {{/if}}
 </ul>
 
 {{!-- Outside of <li> so that we don't have the problem of the nav container stopping the drop-down from showing --}}
-<div id="account-menu" class="account__container">
-    <ul class="account__list">
-        {{#if_eq (this.Authentication.permission) "admin"}}
-            <li class="account__item"><a id="load-admin" href="javascript:void(0)">Admin screen</a></li>
-        {{/if_eq}}
-        <li class="account__item" id="change-password"><button class="btn btn--plain font-size--13">Change my password</button></li>
-        <li class="account__item" id="logout"><a href="javascript:void(0)">Logout</a></li>
-    </ul>
-</div>
+{{> accountMenu }}

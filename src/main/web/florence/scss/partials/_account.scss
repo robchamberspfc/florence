@@ -6,14 +6,10 @@
         margin: 0;
         padding: $lineheight $gutter;
         font-family: 'Open Sans', sans-serif;
-
         background-color: transparent;
-        //background-color: $mine-shaft;
-        //animation: default-color 1.8s ease forwards;
 
         &.selected {
             color: $white;
-            //animation: selected-color 0.1s ease forwards;
         }
 
         // Disabled default button hover/focus states
@@ -22,15 +18,19 @@
             border-radius: 0;
             background-color: transparent;
         }
+
+        &--admin {
+            color: $concrete;
+        }
     }
 
     &__container {
         overflow: hidden;
         display: none; // Stop animation on load, JS removes this on click of the account button
-        animation: slide-up 0.8s ease forwards;
+        animation: slide-up 0.7s ease forwards;
 
         &.selected {
-            animation: slide-down 0.8s ease forwards;
+            animation: slide-down 0.7s ease forwards;
 
             &:after {
                 transition: border-bottom 0.1s linear 0s;
@@ -49,7 +49,11 @@
             border-right: 15px solid transparent;
             border-bottom: 15px solid transparent;
 
-            transition: border-bottom 0.1s linear 0.6s;
+            transition: border-bottom 0.1s linear 0.5s;
+        }
+
+        &--admin.selected:after {
+            border-bottom: 15px solid $nevada;
         }
     }
 
@@ -58,6 +62,10 @@
         background-color: $emperor;
         padding-left: $gutter;
         font-size: 13px;
+
+        &--admin {
+            background-color: $nevada;
+        }
     }
 
     &__item {
@@ -69,6 +77,14 @@
             display: block;
             color: $iron;
             text-decoration: none;
+        }
+        
+        &--admin {
+            color: $white;
+
+            a {
+                color: $white;
+            }
         }
 
         &--trigger {
@@ -84,12 +100,12 @@
 @keyframes slide-down
 {
     from {display: none; height: 0;}
-    to {display: block; height: ($lineheight * 6);}
+    to {display: block; height: ($lineheight * 3);}
 }
 
 @keyframes slide-up
 {
-    from {display: block; height: ($lineheight * 6);}
+    from {display: block; height: ($lineheight * 3);}
     to {display: none; height: 0;}
 }
 

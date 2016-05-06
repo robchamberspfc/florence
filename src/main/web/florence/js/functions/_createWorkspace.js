@@ -33,7 +33,7 @@ function createWorkspace(path, collectionId, menu, stopEventListener) {
         } else {
             document.cookie = "lang=" + "cy;path=/";
         }
-        Florence.refreshAdminMenu();
+        Florence.refreshPublisherMenu();
 
         var workSpace = templates.workSpace(Florence.tredegarBaseUrl + safePath);
         $('.section').html(workSpace);

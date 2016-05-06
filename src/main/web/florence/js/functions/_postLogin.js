@@ -32,7 +32,7 @@ function postLogin(email, password) {
                         sweetAlert("You do not have the permissions to enter here. Please contact an administrator");
                     }
 
-                    Florence.refreshAdminMenu();
+                    Florence.refreshPublisherMenu();
                 },
                 function (error) {
                     logout();

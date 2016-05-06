@@ -1,6 +1,27 @@
+/* VARIABLEs */
 $panel-height-1-top-nav: 819px;
 $panel-height-2-top-nav: 756px;
 
+/* MIXINS */
+// Add active styling to a main/admin nav item
+@mixin nav-selected {
+    color: $white;
+    &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 3px;
+        top: - $lineheight;
+        background-color: $white;
+    }
+
+    a {
+        color: $white;
+    }
+}
+
+/* STYLES */
 .hidden {
     display: none;
 }
@@ -33,30 +54,31 @@ $panel-height-2-top-nav: 756px;
     text-align: right;
 
     &--admin {
+        background-color: $ship-gray;
+
+        &__item {
+            display: inline-block;
+            position: relative;
+
+            &.selected {
+                @include nav-selected;
+            }
+        }
+
+        &__link {
+            color: $concrete;
+            text-decoration: none;
+        }
+    }
+
+    &--main {
         &__item {
 
             display: inline-block;
             position: relative;
 
             &.selected {
-                color: $white;
-                &:before {
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    width: 100%;
-                    height: 3px;
-                    top: - $lineheight;
-                    background-color: $white;
-                }
-
-                a {
-                    color: $white;
-                }
-            }
-
-            &--left {
-                float: left;
+                @include nav-selected;
             }
         }
 

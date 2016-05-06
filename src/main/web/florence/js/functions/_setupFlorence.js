@@ -7,6 +7,7 @@ function setupFlorence() {
     Handlebars.registerPartial("selectorMinute", templates.selectorMinute);
     Handlebars.registerPartial("tickAnimation", templates.tickAnimation);
     Handlebars.registerPartial("loadingAnimation", templates.loadingAnimation);
+    Handlebars.registerPartial("accountMenu", templates.accountMenu);
     Handlebars.registerHelper('select', function (value, options) {
         var $el = $('<select />').html(options.fn(this));
         $el.find('[value="' + value + '"]').attr({'selected': 'selected'});
@@ -93,7 +94,7 @@ function setupFlorence() {
     var florence = templates.florence;
 
     $('body').append(florence);
-    Florence.refreshAdminMenu();
+    Florence.refreshPublisherMenu();
 
     var adminMenu = $('.admin-nav');
     // dirty checks on admin menu

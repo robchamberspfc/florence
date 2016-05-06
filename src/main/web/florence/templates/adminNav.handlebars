@@ -1,0 +1,18 @@
+<ul class="nav nav--admin">
+    {{!-- <li id="network-status" class="icon-status">
+         <div class="icon-status--very-poor"></div>
+         <div class="icon-status--poor"></div>
+         <div class="icon-status--ok"></div>
+         <div class="icon-status--good"></div>
+     </li> --}}
+    {{#if this.Authentication.isAuthenticated}}
+        <li class="account__item--trigger js-account">
+            <button id="account-trigger" class="account__button account__button--admin">My account{{!-- {{this.Authentication.loggedInEmail}} --}}</button>
+        </li>
+        <li class="nav--admin__item js-nav__item"><a class="nav--admin__link" href="javascript:void(0)">Admin options</a></li>
+        <li class="nav--admin__item js-nav__item"><a class="nav--admin__link" href="javascript:void(0)">Reports</a></li>
+    {{/if}}
+</ul>
+
+{{!-- Outside of <li> so that we don't have the problem of the nav container stopping the drop-down from showing --}}
+{{> accountMenu screenToggle='publisher'}}

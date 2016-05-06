@@ -2,7 +2,7 @@
  * Add 'user' drop-down in main nav
  **/
 
-function myAccountUI(email) {
+function myAccountUI() {
     var $menuTrigger = $('#account-trigger'),
         $menu = $('#account-menu');
 
@@ -24,7 +24,15 @@ function myAccountUI(email) {
     // Load admin screen
     $('#load-admin').click(function(e) {
         e.stopPropagation();
-        viewAdmin();
+        Florence.refreshAdminMenu();
+        adminViewController();
+    });
+
+    // Return to publisher screen
+    $('#load-publisher').click(function(e) {
+        e.stopPropagation();
+        Florence.refreshPublisherMenu();
+        viewController();
     });
     
     // Change own password
