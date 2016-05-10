@@ -1,10 +1,19 @@
 {{!-- My account menu - different classes/ids depending on whether it's part of the publisher or admin screen --}}
-<div id="account-menu" class="account__container {{#if_eq screenToggle "publisher"}}account__container--admin{{/if_eq}}">
-    <ul class="account__list {{#if_eq screenToggle "publisher"}}account__list--admin{{/if_eq}}">
+<div id="account-menu" class="account__container">
+    <ul class="account__list">
         {{#if_eq (this.Authentication.permission) "admin"}}
-        <li class="account__item {{#if_eq screenToggle "publisher"}}account__item--admin{{/if_eq}}"><a id="{{#if_eq screenToggle "publisher"}}load-publisher{{else}}load-admin{{/if_eq}}" href="javascript:void(0)">{{#if_eq screenToggle "publisher"}}Publisher{{else}}Admin{{/if_eq}} screen</a></li>
+            <li class="account__item"><a id="{{#if_eq screenToggle "publisher"}}load-publisher{{else}}load-admin{{/if_eq}}" href="javascript:void(0)">{{#if_eq screenToggle "publisher"}}Publisher{{else}}Admin{{/if_eq}} screen</a></li>
         {{/if_eq}}
-        <li class="account__item {{#if_eq screenToggle "publisher"}}account__item--admin{{/if_eq}}" id="change-password"><button class="btn btn--plain font-size--13">Change my password</button></li>
-        <li class="account__item {{#if_eq screenToggle "publisher"}}account__item--admin{{/if_eq}}" id="logout"><a href="javascript:void(0)">Logout</a></li>
+        <li class="account__item" id="change-password"><button class="btn btn--plain font-size--13">Change my password</button></li>
+        <li class="account__item" id="logout"><a href="javascript:void(0)">Logout</a></li>
     </ul>
 </div>
+{{!-- <div id="account-menu" class="account__container {{#if_eq screenToggle "publisher"}}account__container--admin{{/if_eq}}">
+     <ul class="account__list {{#if_eq screenToggle "publisher"}}account__list--admin{{/if_eq}}">
+         {{#if_eq (this.Authentication.permission) "admin"}}
+         <li class="account__item {{#if_eq screenToggle "publisher"}}account__item--admin{{/if_eq}}"><a id="{{#if_eq screenToggle "publisher"}}load-publisher{{else}}load-admin{{/if_eq}}" href="javascript:void(0)">{{#if_eq screenToggle "publisher"}}Publisher{{else}}Admin{{/if_eq}} screen</a></li>
+         {{/if_eq}}
+         <li class="account__item {{#if_eq screenToggle "publisher"}}account__item--admin{{/if_eq}}" id="change-password"><button class="btn btn--plain font-size--13">Change my password</button></li>
+         <li class="account__item {{#if_eq screenToggle "publisher"}}account__item--admin{{/if_eq}}" id="logout"><a href="javascript:void(0)">Logout</a></li>
+     </ul>
+ </div> --}}

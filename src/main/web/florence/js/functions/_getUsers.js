@@ -7,21 +7,21 @@
  */
 function getUsers(success, error, userId) {
 
-  var url = "/zebedee/users";
+    var url = "/zebedee/users";
 
-  if(userId) {
-    url += '?email=' + userId;
-  }
-
-  return $.ajax({
-    url: url,
-    dataType: 'json',
-    type: 'GET',
-    success: function (response) {
-      success(response);
-    },
-    error: function (response) {
-      error(response);
+    if (userId) {
+        url += '?email=' + userId;
     }
-  });
+
+    return $.ajax({
+        url: url,
+        dataType: 'json',
+        type: 'GET',
+        success: function (response) {
+            success(response);
+        },
+        error: function (response) {
+            error(response);
+        }
+    });
 }

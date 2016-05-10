@@ -1,0 +1,15 @@
+<div class="options">
+    <h1>Admin options</h1>
+    <form class="options__form">
+        <fieldset class="options__fieldset">
+            <div class="options__option">
+                <span class="options__label">Modify raw JSON</span>
+                <label for="raw-json" class="options__switch options__switch--flat">
+                    <input class="options__switch-input" id="raw-json" type="checkbox" {{#if this.adminOptions.rawJson}}checked{{/if}}/>
+                    <span class="options__switch-label" data-on="On" data-off="Off"></span>
+                    <span class="options__switch-handle"></span>
+                </label>
+            </div>
+        </fieldset>
+    </form>
+</div>
