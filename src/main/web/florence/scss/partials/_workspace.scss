@@ -1,7 +1,8 @@
 .nav {
     &--workspace {
         background-color: transparent;
-        height: auto;
+        height: 100%;
+        //height: auto;
         text-align: left;
 
         &__item {
@@ -57,6 +58,14 @@
                 color: $gray-chateau;
                 text-decoration: none;
                 font-size: 14px;
+            }
+        }
+
+        &__import {
+            position: absolute;
+            top: ($lineheight * 23);
+            &:after {
+                display: none;
             }
         }
 
