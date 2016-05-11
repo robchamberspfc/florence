@@ -15,8 +15,13 @@ function viewOptions() {
             // Labels aren't clickable by default (because of switch markup) so binding click events to them
             var $labels = $('.options__label');
             $labels.click(function() {
-                // Set next input to checked
+                //TODO Set next input to checked
             });
+
+            // Check whether adminOptions exists yet, if not add into user object
+            if (!response.adminOptions) {
+                response['adminOptions'] = {};
+            }
 
             // Raw JSON option
             var $switches = $('.options__switch-input');

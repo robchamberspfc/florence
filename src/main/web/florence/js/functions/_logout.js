@@ -6,6 +6,7 @@ function logout() {
   delete_cookie('collection');
   localStorage.setItem("loggedInAs", "");
   localStorage.setItem("userPermissions", "");
+  localStorage.setItem("rawJson", "");
   Florence.refreshPublisherMenu();
   viewController();
 }

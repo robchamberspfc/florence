@@ -63,7 +63,7 @@
 
         &__import {
             position: absolute;
-            top: ($lineheight * 23);
+            top: ($lineheight * 39);
             &:after {
                 display: none;
             }
@@ -178,14 +178,17 @@
             position: unset;
         }
 
+        .edit-accordion {
+            height: 100%;
+        }
+
         .edit-nav {
             box-sizing: border-box;
             position: absolute;
             bottom: 0;
-            height: $lineheight * 4;
             width: $col--4;
             padding-top: $lineheight / 2;
-            padding-bottom: $lineheight / 2;
+            padding-bottom: $lineheight;
             background: $gray-chateau;
         }
 

@@ -4,14 +4,15 @@
  * @param newData - what data/node is being updated in adminOptions object
  */
 
-function updateAdminOptions(email, updatedOptions) {
+function updateAdminOptions(email, updatedUser) {
     putUser(
         success = function() {
             console.log('Admin options updated');
+            localStorage.setItem("rawJson", updatedUser.adminOptions.rawJson)
         },
         error = function(response) {
             handleApiError(response)
         },
-        email, updatedOptions
+        email, updatedUser
     )
 }

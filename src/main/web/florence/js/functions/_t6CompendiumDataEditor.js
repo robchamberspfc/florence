@@ -138,32 +138,7 @@ function compendiumDataEditor(collectionId, data) {
         }, 3000);
     });
 
-    // Save
-    var editNav = $('.edit-nav');
-    editNav.off(); // remove any existing event handlers.
-
-    editNav.on('click', '#save', function () {
-        save();
-        updateContent(collectionId, data.uri, JSON.stringify(data));
-    });
-
-    //editNav.on('click', '#save-and-exit', function () {
-    //  save();
-    //  updateContent(collectionId, data.uri, JSON.stringify(data), parentUrl);
-    //});
-
-    // completed to review
-    editNav.on('click', '.btn-edit-save-and-submit-for-review', function () {
-        //pageData = $('.fl-editor__headline').val();
-        save();
-        saveAndCompleteContent(collectionId, data.uri, JSON.stringify(data), parentUrl);
-    });
-
-    // reviewed to approve
-    editNav.on('click', '.btn-edit-save-and-submit-for-approval', function () {
-        save();
-        saveAndReviewContent(collectionId, data.uri, JSON.stringify(data), parentUrl);
-    });
+    editorNav(save, collectionId, data.uri, data, parentUrl);
 
     function save() {
         clearTimeout(timeoutId);

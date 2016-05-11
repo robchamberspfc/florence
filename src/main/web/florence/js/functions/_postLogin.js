@@ -23,6 +23,16 @@ function postLogin(email, password) {
                     if (permission.admin) {
                         viewController();
                         localStorage.setItem("userPermissions", 'admin');
+
+                        // Set admin-options in local storage
+                        getUsers (
+                            success = function(response) {
+                                localStorage.setItem("rawJson", response.adminOptions.rawJson);
+                            }, error = function() {
+                                console.log("Error setting admin options");
+                            },
+                            email
+                        )
                     } else if (permission.editor) {
                         viewController();
                         localStorage.setItem("userPermissions", 'editor');

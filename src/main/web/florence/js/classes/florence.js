@@ -58,6 +58,12 @@ Florence.Authentication = {
     }
 };
 
+Florence.adminOptions = {
+    rawJson: function() {
+        return localStorage.getItem("rawJson");
+    }
+};
+
 Florence.Handler = function (e) {
     if (Florence.Editor.isDirty) {
         var result = confirm("You have unsaved changes. Are you sure you want to continue");

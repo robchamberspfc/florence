@@ -158,23 +158,7 @@ function bulletinEditor(collectionId, data) {
         }, 3000);
     });
 
-    // Save
-    var editNav = $('.edit-nav');
-    editNav.off(); // remove any existing event handlers.
-
-    editNav.on('click', '.btn-edit-save', function () {
-        save(updateContent);
-    });
-
-    // completed to review
-    editNav.on('click', '.btn-edit-save-and-submit-for-review', function () {
-        save(saveAndCompleteContent);
-    });
-
-    // reviewed to approve
-    editNav.on('click', '.btn-edit-save-and-submit-for-approval', function () {
-        save(saveAndReviewContent);
-    });
+    editorNav(save);
 
     function save(onSave) {
         clearTimeout(timeoutId);

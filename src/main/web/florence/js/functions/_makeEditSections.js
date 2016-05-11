@@ -9,6 +9,8 @@ function makeEditSections(collectionId, pageData, isPageComplete) {
 
     var templateData = jQuery.extend(true, {}, pageData); // clone page data to add template related properties.
     templateData.isPageComplete = isPageComplete;
+    templateData.permission = Florence.Authentication.permission();
+    templateData.rawJson = Florence.adminOptions.rawJson();
 
     if (pageData.type === 'home_page') {
         var email = localStorage.getItem('loggedInAs');   // get user permissions
@@ -451,9 +453,6 @@ function makeEditSections(collectionId, pageData, isPageComplete) {
     // Listen on all input within the workspace edit panel for dirty checks.
     $('.workspace-edit :input').on('input', function () {
         Florence.Editor.isDirty = true;
-        // remove the handler now we know content has changed.
-        //$(':input').unbind('input');
-        //console.log('Changes detected.');
     });
 }
 

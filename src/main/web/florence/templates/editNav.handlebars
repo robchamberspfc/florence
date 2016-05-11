@@ -5,3 +5,7 @@
 {{else}}
     <button class="btn-edit-save-and-submit-for-review">Save and submit for review</button>
 {{/if}}
+{{#if this.rawJson}}
+    <button class="btn btn--warning" id="json-mode">JSON mode</button>
+    <button class="btn btn--warning" id="editor-mode" style="display: none;">UI mode</button>
+{{/if}}
