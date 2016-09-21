@@ -20,7 +20,7 @@ node {
     stage('Image') {
         docker.withRegistry(registry['uri'], { ->
             sh registry['login']
-            docker.build(registry['image']).push(registry['tag'])
+            docker.build(registry['image'], '--no-cache --pull --rm .').push(registry['tag'])
         })
     }
 
