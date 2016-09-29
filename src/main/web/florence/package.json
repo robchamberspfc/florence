@@ -9,7 +9,8 @@
         "cat": "latest",
         "onchange": "latest",
         "handlebars": "~3.0.1",
-        "node-sass": "latest"
+        "node-sass": "latest",
+        "webpack": "^1.13.1"
     },
     "scripts": {
         "watch-js": "npm run build-js && ./node_modules/onchange/cli.js 'js/classes/*.js' 'js/functions/*.js' 'js/components/*.js' -v -- npm run build-js",
@@ -19,6 +20,7 @@
         "watch-css": "npm run build-css && ./node_modules/onchange/cli.js 'scss/*.scss' 'scss/*/*.scss' -v -- npm run build-css",
         "build-css": "./node_modules/node-sass/bin/node-sass --output-style expanded --source-map assets/css scss/main.scss assets/css/main.min.css",
         "watch": "npm run watch-js & npm run watch-templates & npm run watch-css",
-        "postinstall": "npm run build-js & npm run build-templates & npm run build-css"
+        "postinstall": "npm run build-js & npm run build-templates & npm run build-css",
+        "build": "webpack"
     }
 }
