@@ -7,6 +7,25 @@
 
 function loadPageDataIntoEditor(path, collectionId, click) {
 
+    // Check whether page is being edited in another collection already TODO - remove stuff to get collection name, replace leading slash on path and adding /data.json. This will all be done server-side soon.
+    var collectionName = collectionId.split('-')[0];
+    fetch('/zebedee/collectioncontentstatus/' + collectionName + '?uri=' + path.replace(/^\//g, '') + '/data.json', {credentials: "include"})
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(jsonResponse) {
+            if (jsonResponse.length > 0) {
+                sweetAlert({
+                    title: "Page already being edited",
+                    text: "You won't be able to edit this content because it is already in another collection",
+                    type: "info"
+                })
+            }
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
     if (Florence.globalVars.welsh) {
         if (path === '/') {       //add whatever needed to read content in Welsh
             var pageUrlData = path + '&lang=cy';
