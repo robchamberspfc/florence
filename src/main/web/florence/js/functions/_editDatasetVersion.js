@@ -468,11 +468,16 @@ function initialiseDatasetVersion(collectionId, data, templateData, field, idFie
                         });
                         // delete modified data.json and revert to published
                         deleteContent(collectionId, pathToDelete, function () {
+                            console.log("deleteContent");
                             loadPageDataIntoEditor(pathToDelete, collectionId);
                             refreshPreview(pathToDelete);
-                        }, function (error) {
+                        },
+                         function (error) {
                             handleApiError(error);
                         });
+
+                        cleanUpGeneratedTimeSeriesFiles(fileToDelete, pathToDelete, collectionId);
+
                     }, function (response) {
                         if (response.status === 404) {
                             sweetAlert("You cannot delete a " + idField + " that has been published.");
@@ -486,6 +491,45 @@ function initialiseDatasetVersion(collectionId, data, templateData, field, idFie
         });
     });
 
+}
+
+function cleanUpGeneratedTimeSeriesFiles(fileToDelete, uri, collectionId) {
+    console.log("cleanUpGeneratedTimeSeriesFiles");
+    var parentUrl = getParentPage(uri);
+
+    fetch(parentUrl + '/data', {credentials: 'include'}).then(function(response) {
+        return response.json();
+    }).then(function(parentData) {
+        var _datasetId = parentData.description.datasetId.toUpperCase();
+
+         $.ajax({
+            url: "/zebedee/TimeSeriesContent/" + collectionId + "?datasetId=" + _datasetId,
+            type: 'DELETE',
+            cache: false,
+            processData: false,
+            contentType: false,
+            async: "false",
+            success: function (response) {
+                if (response.isDelete) {
+                    console.log("Timeseries manifest delete success");
+                    swal({
+                        title: "Generated TimeSeries Files deleted.",
+                        type: "success",
+                        timer: 3000
+                    });
+                } else {
+                    swal({
+                        title: "No generated TimeSeries Files to delete",
+                        type: "success",
+                        timer: 3000
+                    });
+                }
+            },
+            error: function(response) {
+                console.log("Timeseries manifest delete error " + response);
+            }
+         });
+    });
 }
 
 function saveDatasetVersion(collectionId, path, data, field, idField) {
