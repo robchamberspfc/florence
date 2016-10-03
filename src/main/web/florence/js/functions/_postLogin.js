@@ -18,8 +18,13 @@ function postLogin(email, password) {
         success: function (response) {
             document.cookie = "access_token=" + response + ";path=/";
             localStorage.setItem("loggedInAs", email);
+            // store.dispatch({
+            //     type: "UPDATE_EMAIL",
+            //     email: email
+            // });
             getUserPermission(
                 function (permission) {
+                    console.log(permission);
                     // Only allow access to editors and admin
                     if (permission.admin || permission.editor) {
                         getPublisherType(permission);

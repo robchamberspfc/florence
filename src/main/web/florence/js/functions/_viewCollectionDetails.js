@@ -1,3 +1,4 @@
+
 function viewCollectionDetails(collectionId, $this) {
 
     getCollectionDetails(collectionId,
@@ -219,8 +220,10 @@ function viewCollectionDetails(collectionId, $this) {
         });
 
         $workOnBtn.click(function () {
-            Florence.globalVars.welsh = false;
-            createWorkspace('', collectionId, 'browse', collection);
+            var workspaceController = require('workspace/workspaceController');
+            workspaceController.init();
+            // Florence.globalVars.welsh = false;
+            // createWorkspace('', collectionId, 'browse', collection);
         });
 
         setCollectionDetailsHeight();
