@@ -38,5 +38,6 @@ module.exports = {
         fs: 'empty',
         net: 'empty',
         tls: 'empty'
-    }
+    },
+    devtool: "cheap-module-eval-source-map"
 };
