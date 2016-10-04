@@ -18,8 +18,14 @@ function postLogin(email, password) {
         success: function (response) {
             document.cookie = "access_token=" + response + ";path=/";
             localStorage.setItem("loggedInAs", email);
+
+            // Storing in Redux for use in refactored JS
+            var userState = require('shared/state/userState.js');
+            userState.email.set(email);
+
             getUserPermission(
                 function (permission) {
+                    console.log(permission);
                     // Only allow access to editors and admin
                     if (permission.admin || permission.editor) {
                         getPublisherType(permission);
@@ -50,14 +56,25 @@ function postLogin(email, password) {
 }
 
 function getPublisherType(permission) {
+    // Variable for user type to be dispatched to Redux later
+    var userState = require('shared/state/userState.js'),
+        userType;
+
     // Store in localStorage publisher type
     if (permission.admin) {
         localStorage.setItem("userType", "PUBLISHING_SUPPORT");
+        userType = "PUBLISHING_SUPPORT"
     } else if (permission.editor && !permission.dataVisPublisher) {
         localStorage.setItem("userType", "PUBLISHING_SUPPORT");
+        userType = "PUBLISHING_SUPPORT";
     } else if (permission.editor && permission.dataVisPublisher) {
         localStorage.setItem("userType", "DATA_VISUALISATION");
+        userType = "DATA_VISUALISATION";
     } else if (!permission.admin && !permission.editor && !permission.dataVisPublisher) {
         localStorage.setItem("userType", "VIEWER");
+        userType = "VIEWER";
     }
+
+    // Update Redux with user type
+    userState.type.set(userType);
 }

@@ -70,6 +70,10 @@ Florence.Handler = function (e) {
     }
 };
 
+// Add base url to Redux for use in refactored JS
+var baseUrlState = require('shared/state/baseUrlState');
+baseUrlState.set(window.location.origin);
+
 // if running in a node environment export this as a module.
 if (typeof module !== 'undefined') {
     module.exports = Florence;
