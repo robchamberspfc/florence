@@ -2,10 +2,10 @@
 var store = require('shared/state/state.js');
 
 var collectionState = {
-    getCollectionState: function () {
+    get: function () {
         return store.getState().editor.collectionData;
     },
-    setCollectionState: function (collectionData) {
+    set: function (collectionData) {
         store.dispatch({
             type: "UPDATE_COLLECTION_DATA",
             collectionData: collectionData

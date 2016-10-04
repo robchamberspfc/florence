@@ -1,0 +1,34 @@
+<section class="panel workspace-browse">
+    <nav class="tree-nav-holder js-browse">
+        <ul class="page-list page-list--tree active">
+            <li class="js-browse__item selected" data-url="{{uri}}">
+                <div class="page__container selected">
+                    <span class="js-browse__item-title page__item{{#unless uri}} page__item--directory{{else}} page__item--{{type}}{{/unless}}">{{description.title}}</span>
+                    <div class="page__buttons page__buttons--list selected">
+                        <button class="btn btn--primary btn-browse-edit">Edit</button>
+                        <button class="btn btn--positive btn-browse-create">Create</button>
+                        {{#if isDeletable}}<button class="btn btn--warning btn-browse-delete">Delete</button>{{/if}}
+                    </div>
+                    <!--{{#ifCond collectionOwner "===" "PUBLISHING_SUPPORT"}}-->
+                        <!--<div class="page__buttons page__buttons--list selected">-->
+                            <!--<button class="btn btn--primary btn-browse-edit">Edit</button>-->
+                            <!--<button class="btn btn--positive btn-browse-create">Create</button>-->
+                            <!--{{#if isDeletable}}<button class="btn btn--warning btn-browse-delete">Delete</button>{{/if}}-->
+                        <!--</div>-->
+                    <!--{{/ifCond}}-->
+                </div>
+                {{#if children}} {{! Within the context of the current item }}
+                    <ul class="js-browse__children active">
+                        {{> browseNode}} {{! Recursively render the partial }}
+                        <!--{{#ifCond collectionOwner "===" "PUBLISHING_SUPPORT"}}-->
+                            <!--{{> browseNode}} {{! Recursively render the partial }}-->
+                        <!--{{/ifCond}}-->
+                        <!--{{#ifCond collectionOwner "===" "DATA_VISUALISATION"}}-->
+                            <!--{{> browseVisNode}} {{! Recursively render the partial }}-->
+                        <!--{{/ifCond}}-->
+                    </ul>
+                {{/if}}
+            </li>
+        </ul>
+    </nav>
+</section>

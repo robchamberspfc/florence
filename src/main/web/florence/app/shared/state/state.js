@@ -45,9 +45,9 @@ function florence(state, action) {
 
     // Reducer switch function, updates the state as necessary
     switch (action.type) {
-        case ("UPDATE_EMAIL"): {
-            newState.user.email = action.email;
-            break
+        case ("UPDATE_BASE_URL"): {
+            newState.baseUrl = action.baseUrl;
+            break;
         }
         case ("UPDATE_ACTIVE_EDITOR_SCREEN"): {
             newState.editor.activeScreen = action.activeId;
@@ -55,6 +55,15 @@ function florence(state, action) {
         }
         case ("UPDATE_COLLECTION_DATA"): {
             newState.editor.collectionData = action.collectionData;
+            break;
+        }
+        case ("UPDATE_USER_EMAIL"): {
+            newState.user.email = action.userEmail;
+            break;
+        }
+        case ("UPDATE_USER_TYPE"): {
+            newState.user.type = action.userType;
+            break;
         }
     }
 

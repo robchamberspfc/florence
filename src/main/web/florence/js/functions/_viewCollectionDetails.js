@@ -221,7 +221,7 @@ function viewCollectionDetails(collectionId, $this) {
 
         $workOnBtn.click(function () {
             var collectionState = require('shared/state/collectionState.js');
-            collectionState.setCollectionState(collection);
+            collectionState.set(collection);
             var workspaceController = require('workspace/workspaceController');
             workspaceController.init();
             // Florence.globalVars.welsh = false;

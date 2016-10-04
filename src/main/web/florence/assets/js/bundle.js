@@ -131,6 +131,10 @@
 	    }
 	};
 
+	// Add base url to Redux for use in refactored JS
+	var baseUrlState = __webpack_require__(48);
+	baseUrlState.set(window.location.origin);
+
 	// if running in a node environment export this as a module.
 	if (true) {
 	    module.exports = Florence;
@@ -9204,10 +9208,11 @@
 	        success: function (response) {
 	            document.cookie = "access_token=" + response + ";path=/";
 	            localStorage.setItem("loggedInAs", email);
-	            // store.dispatch({
-	            //     type: "UPDATE_EMAIL",
-	            //     email: email
-	            // });
+
+	            // Storing in Redux for use in refactored JS
+	            var userState = __webpack_require__(47);
+	            userState.email.set(email);
+
 	            getUserPermission(
 	                function (permission) {
 	                    console.log(permission);
@@ -9241,16 +9246,27 @@
 	}
 
 	function getPublisherType(permission) {
+	    // Variable for user type to be dispatched to Redux later
+	    var userState = __webpack_require__(47),
+	        userType;
+
 	    // Store in localStorage publisher type
 	    if (permission.admin) {
 	        localStorage.setItem("userType", "PUBLISHING_SUPPORT");
+	        userType = "PUBLISHING_SUPPORT"
 	    } else if (permission.editor && !permission.dataVisPublisher) {
 	        localStorage.setItem("userType", "PUBLISHING_SUPPORT");
+	        userType = "PUBLISHING_SUPPORT";
 	    } else if (permission.editor && permission.dataVisPublisher) {
 	        localStorage.setItem("userType", "DATA_VISUALISATION");
+	        userType = "DATA_VISUALISATION";
 	    } else if (!permission.admin && !permission.editor && !permission.dataVisPublisher) {
 	        localStorage.setItem("userType", "VIEWER");
+	        userType = "VIEWER";
 	    }
+
+	    // Update Redux with user type
+	    userState.type.set(userType);
 	}
 	function saveAndReviewContent(collectionId, path, content, recursive, redirectToPath) {
 
@@ -14863,7 +14879,7 @@
 
 	        $workOnBtn.click(function () {
 	            var collectionState = __webpack_require__(8);
-	            collectionState.setCollectionState(collection);
+	            collectionState.set(collection);
 	            var workspaceController = __webpack_require__(26);
 	            workspaceController.init();
 	            // Florence.globalVars.welsh = false;
@@ -17864,10 +17880,10 @@
 	var store = __webpack_require__(9);
 
 	var collectionState = {
-	    getCollectionState: function () {
+	    get: function () {
 	        return store.getState().editor.collectionData;
 	    },
-	    setCollectionState: function (collectionData) {
+	    set: function (collectionData) {
 	        store.dispatch({
 	            type: "UPDATE_COLLECTION_DATA",
 	            collectionData: collectionData
@@ -17929,9 +17945,9 @@
 
 	    // Reducer switch function, updates the state as necessary
 	    switch (action.type) {
-	        case ("UPDATE_EMAIL"): {
-	            newState.user.email = action.email;
-	            break
+	        case ("UPDATE_BASE_URL"): {
+	            newState.baseUrl = action.baseUrl;
+	            break;
 	        }
 	        case ("UPDATE_ACTIVE_EDITOR_SCREEN"): {
 	            newState.editor.activeScreen = action.activeId;
@@ -17939,6 +17955,15 @@
 	        }
 	        case ("UPDATE_COLLECTION_DATA"): {
 	            newState.editor.collectionData = action.collectionData;
+	            break;
+	        }
+	        case ("UPDATE_USER_EMAIL"): {
+	            newState.user.email = action.userEmail;
+	            break;
+	        }
+	        case ("UPDATE_USER_TYPE"): {
+	            newState.user.type = action.userType;
+	            break;
 	        }
 	    }
 
@@ -19188,9 +19213,9 @@
 
 	var Handlebars = __webpack_require__(29);
 	function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
+	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
 	    return "<nav class=\"panel col col--1 nav nav--workspace js-workspace-nav\" id=\"workspace-navigation\">\n</nav>\n<div class=\"panel col col--4 workspace-menu\" id=\"workspace-browse\">\n</div>\n<section class=\"panel col col--7 workspace-browser\" id=\"workspace-preview\">\n</section>\n";
-	},"useData":true,"useDepths":true,"compat":true});
+	},"useData":true});
 
 /***/ },
 /* 29 */
@@ -20047,21 +20072,44 @@
 
 	var Handlebars = __webpack_require__(29);
 	function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
+	module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
 	    return "\n<ul class=\"nav__list nav__list--workspace\">\n     <li class=\"nav__item nav__item--workspace nav__item--lang js-workspace-nav__item\" id=\"nav--workspace__welsh\"></li>\n\n     <li class=\"nav__item nav__item--workspace nav__item--browse js-workspace-nav__item selected\" id=\"browse\">\n         <a class=\"nav__link\" href=\"javascript:void(0)\">Browse</a>\n     </li>\n     <li class=\"nav__item nav__item--workspace nav__item--create js-workspace-nav__item\" id=\"create\">\n         <a class=\"nav__link\" href=\"javascript:void(0)\">Create</a>\n     </li>\n     <li class=\"nav__item nav__item--workspace nav__item--edit js-workspace-nav__item\" id=\"edit\">\n         <a class=\"nav__link\" href=\"javascript:void(0)\">Edit</a>\n     </li>\n     <li class=\"nav__item nav__item--workspace nav__item--import nav--workspace__import js-workspace-nav__item\" id=\"import\">\n         <a class=\"nav__link\" href=\"javascript:void(0)\">Import</a>\n     </li>\n </ul>";
-	},"useData":true,"useDepths":true,"compat":true});
+	},"useData":true});
 
 /***/ },
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var browseView = __webpack_require__(41),
-	    getBrowseTree = __webpack_require__(44);
+	    getBrowseTree = __webpack_require__(46),
+	    userState = __webpack_require__(47);
 
 	var browseController = {
 	    init: function () {
 	        getBrowseTree.then(function(browseTreeData) {
 	            browseView.render(browseTreeData);
+	            browseController.bindClick();
+	        });
+	    },
+
+	    bindClick: function() {
+	        $('.js-browse__item-title').click(function() {
+	            var $this = $(this),
+	                $thisItem = $this.closest('.js-browse__item'),
+	                url = $thisItem.attr('data-url');
+
+	            if (url) {
+	                browseView.selectPage(url);
+	            } else {
+	                browseView.selectDirectory($this);
+	            }
+
+	            // TODO possibly need to set the scroll position of the browse tree, open up parent directories and show pages under directories?
+
+	            if (userState.type.isPublisher()) {
+	                // TODO update iframe to new URL
+
+	            }
 	        });
 	    }
 	};
@@ -20075,11 +20123,39 @@
 
 	
 	var nodeTemplate = __webpack_require__(42),
-	    getBrowseTree = __webpack_require__(44);
+	    getBrowseTree = __webpack_require__(46);
 
 	var browseView = {
+
 	    render: function (browseTreeData) {
 	        document.getElementById('workspace-browse').innerHTML = nodeTemplate(browseTreeData);
+	    },
+
+	    selectDirectory: function($this) {
+	        $('.page__item--directory').removeClass('selected'); // remove previous selections
+	        $this.parents('.js-browse__item--directory').find('.page__item--directory:first').addClass('selected'); // select directories along parent path
+	    },
+
+	    selectPage: function(url) {
+
+	        var $selectedListItem = $('[data-url="' + url + '"]'); //get first li with data-url with url
+	        $('.js-browse__item.selected').removeClass('selected');
+	        $selectedListItem.addClass('selected');
+
+	        // Hide container for item and buttons for previous and show selected one
+	        $('.page__container.selected').removeClass('selected');
+	        $selectedListItem.find('.page__container:first').addClass('selected');
+
+	        // Hide previous displayed page buttons and show selected one
+	        if ($selectedListItem.find('.page__buttons:first')) {
+	            $('.page__buttons.selected').removeClass('selected');
+	            $selectedListItem.find('.page__buttons:first').addClass('selected');
+	        }
+
+	        //page-list-tree
+	        $('.tree-nav-holder ul').removeClass('active');
+	        $selectedListItem.parents('ul').addClass('active');
+	        $selectedListItem.closest('li').children('ul').addClass('active');
 	    }
 	};
 
@@ -20092,82 +20168,58 @@
 
 	var Handlebars = __webpack_require__(29);
 	function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(depth0,helpers,partials,data,blockParams,depths) {
-	    var stack1, alias1=this.lookup, alias2=this.lambda, alias3=this.escapeExpression;
-
-	  return " \n    <li class=\"js-browse__item "
-	    + ((stack1 = helpers.unless.call(depth0,alias1(depths, "uri"),{"name":"unless","hash":{},"fn":this.program(2, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "\" data-url=\""
-	    + alias3(alias2(alias1(depths, "uri"), depth0))
-	    + "\">\n        <span class=\"page__container "
-	    + ((stack1 = helpers['if'].call(depth0,alias1(depths, "deleteMarker"),{"name":"if","hash":{},"fn":this.program(4, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "\">\n            <span class=\"js-browse__item-title page__item"
-	    + ((stack1 = helpers.unless.call(depth0,alias1(depths, "uri"),{"name":"unless","hash":{},"fn":this.program(6, data, 0, blockParams, depths),"inverse":this.program(8, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
-	    + "\">"
-	    + alias3(alias2(((stack1 = alias1(depths, "description")) != null ? stack1.title : stack1), depth0))
-	    + ((stack1 = helpers['if'].call(depth0,((stack1 = alias1(depths, "description")) != null ? stack1.edition : stack1),{"name":"if","hash":{},"fn":this.program(10, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "</span>\n            <span class=\"page__buttons page__buttons--list\">\n\n                <span class=\"page__primary-buttons js-browse__buttons--primary "
-	    + ((stack1 = helpers['if'].call(depth0,alias1(depths, "deleteMarker"),{"name":"if","hash":{},"fn":this.program(12, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "\">\n                    <button class=\"btn btn--primary btn-browse-edit\">Edit</button>\n                    <button class=\"btn btn--positive btn-browse-create\">Create</button>\n                </span>\n\n\n                <button class=\"btn btn--primary btn-browse-delete-revert "
-	    + ((stack1 = __default(__webpack_require__(43)).call(depth0,alias1(depths, "deleteIsInCollection"),"&&",alias1(depths, "deleteMarker"),{"name":"ifCond","hash":{},"fn":this.program(14, data, 0, blockParams, depths),"inverse":this.program(12, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
-	    + "\">Revert deletion</button>\n"
-	    + ((stack1 = helpers['if'].call(depth0,alias1(depths, "deleteMarker"),{"name":"if","hash":{},"fn":this.program(16, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "\n"
-	    + ((stack1 = helpers['if'].call(depth0,alias1(depths, "isDeletable"),{"name":"if","hash":{},"fn":this.program(19, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "            </span>\n        </span>\n        "
-	    + ((stack1 = helpers['if'].call(depth0,alias1(depths, "children"),{"name":"if","hash":{},"fn":this.program(24, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "    </li>\n";
-	},"2":function(depth0,helpers,partials,data,blockParams,depths) {
-	    return "js-browse__item--directory";
-	},"4":function(depth0,helpers,partials,data,blockParams,depths) {
-	    return "deleted";
-	},"6":function(depth0,helpers,partials,data,blockParams,depths) {
+	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(depth0,helpers,partials,data) {
 	    return " page__item--directory";
-	},"8":function(depth0,helpers,partials,data,blockParams,depths) {
+	},"3":function(depth0,helpers,partials,data) {
 	    return " page__item--"
-	    + this.escapeExpression(this.lambda(this.lookup(depths, "type"), depth0));
-	},"10":function(depth0,helpers,partials,data,blockParams,depths) {
+	    + this.escapeExpression(this.lambda((depth0 != null ? depth0.type : depth0), depth0));
+	},"5":function(depth0,helpers,partials,data) {
+	    return "<button class=\"btn btn--warning btn-browse-delete\">Delete</button>";
+	},"7":function(depth0,helpers,partials,data) {
 	    var stack1;
 
-	  return "\n                : "
-	    + this.escapeExpression(this.lambda(((stack1 = this.lookup(depths, "description")) != null ? stack1.edition : stack1), depth0));
-	},"12":function(depth0,helpers,partials,data,blockParams,depths) {
-	    return "hidden";
-	},"14":function(depth0,helpers,partials,data,blockParams,depths) {
-	    return "";
-	},"16":function(depth0,helpers,partials,data,blockParams,depths) {
+	  return "-->\n                        <!--<div class=\"page__buttons page__buttons--list selected\">-->\n                            <!--<button class=\"btn btn--primary btn-browse-edit\">Edit</button>-->\n                            <!--<button class=\"btn btn--positive btn-browse-create\">Create</button>-->\n                            <!--"
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.isDeletable : depth0),{"name":"if","hash":{},"fn":this.program(5, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "-->\n                        <!--</div>-->\n                    <!--";
+	},"9":function(depth0,helpers,partials,data) {
 	    var stack1;
 
-	  return "                    "
-	    + ((stack1 = helpers.unless.call(depth0,this.lookup(depths, "deleteIsInCollection"),{"name":"unless","hash":{},"fn":this.program(17, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "\n";
-	},"17":function(depth0,helpers,partials,data,blockParams,depths) {
-	    return "* this file has been delete in another collection";
-	},"19":function(depth0,helpers,partials,data,blockParams,depths) {
-	    var stack1, alias1=this.lookup;
-
-	  return "                    <span class=\"js-browse__buttons--secondary "
-	    + ((stack1 = helpers['if'].call(depth0,alias1(depths, "deleteMarker"),{"name":"if","hash":{},"fn":this.program(12, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "\">\n                        <button class=\"js-browse__menu hamburger-icon hamburger-icon--page-item\">\n                            <span class=\"hamburger-icon__span\">toggle menu</span>\n                        </button>\n\n                        <span class=\"page__menu\">\n"
-	    + ((stack1 = helpers['if'].call(depth0,alias1(depths, "isMoveable"),{"name":"if","hash":{},"fn":this.program(20, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "\n"
-	    + ((stack1 = helpers['if'].call(depth0,alias1(depths, "isDeletable"),{"name":"if","hash":{},"fn":this.program(22, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-	    + "\n                        </span>\n                    </span>\n";
-	},"20":function(depth0,helpers,partials,data,blockParams,depths) {
-	    return "                                <button class=\"btn btn--primary btn-browse-move\">Move</button>";
-	},"22":function(depth0,helpers,partials,data,blockParams,depths) {
-	    return "                                <button class=\"btn btn--warning btn-browse-delete\">Delete</button>";
-	},"24":function(depth0,helpers,partials,data,blockParams,depths) {
+	  return " \n                    <ul class=\"js-browse__children active\">\n                        "
+	    + ((stack1 = this.invokePartial(__webpack_require__(44),depth0,{"name":"browseNode","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
+	    + " \n                        <!--"
+	    + ((stack1 = __default(__webpack_require__(43)).call(depth0,(depth0 != null ? depth0.collectionOwner : depth0),"===","PUBLISHING_SUPPORT",{"name":"ifCond","hash":{},"fn":this.program(10, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "-->\n                        <!--"
+	    + ((stack1 = __default(__webpack_require__(43)).call(depth0,(depth0 != null ? depth0.collectionOwner : depth0),"===","DATA_VISUALISATION",{"name":"ifCond","hash":{},"fn":this.program(12, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "-->\n                    </ul>\n";
+	},"10":function(depth0,helpers,partials,data) {
 	    var stack1;
 
-	  return " \n            <ul class=\"js-browse__children\">\n                "
-	    + ((stack1 = this.invokePartial(__webpack_require__(42),depth0,{"name":"browseNode","data":data,"helpers":helpers,"partials":partials,"depths":depths})) != null ? stack1 : "")
-	    + " \n            </ul>\n";
-	},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data,blockParams,depths) {
+	  return "-->\n                            <!--"
+	    + ((stack1 = this.invokePartial(__webpack_require__(44),depth0,{"name":"browseNode","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
+	    + " -->\n                        <!--";
+	},"12":function(depth0,helpers,partials,data) {
 	    var stack1;
 
-	  return ((stack1 = helpers.each.call(depth0,this.lookup(depths, "children"),{"name":"each","hash":{},"fn":this.program(1, data, 0, blockParams, depths),"inverse":this.noop,"data":data})) != null ? stack1 : "");
-	},"usePartial":true,"useData":true,"useDepths":true,"compat":true});
+	  return "-->\n                            <!--"
+	    + ((stack1 = this.invokePartial(__webpack_require__(45),depth0,{"name":"browseVisNode","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
+	    + " -->\n                        <!--";
+	},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+	    var stack1, alias1=this.lambda, alias2=this.escapeExpression;
+
+	  return "<section class=\"panel workspace-browse\">\n    <nav class=\"tree-nav-holder js-browse\">\n        <ul class=\"page-list page-list--tree active\">\n            <li class=\"js-browse__item selected\" data-url=\""
+	    + alias2(alias1((depth0 != null ? depth0.uri : depth0), depth0))
+	    + "\">\n                <div class=\"page__container selected\">\n                    <span class=\"js-browse__item-title page__item"
+	    + ((stack1 = helpers.unless.call(depth0,(depth0 != null ? depth0.uri : depth0),{"name":"unless","hash":{},"fn":this.program(1, data, 0),"inverse":this.program(3, data, 0),"data":data})) != null ? stack1 : "")
+	    + "\">"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.description : depth0)) != null ? stack1.title : stack1), depth0))
+	    + "</span>\n                    <div class=\"page__buttons page__buttons--list selected\">\n                        <button class=\"btn btn--primary btn-browse-edit\">Edit</button>\n                        <button class=\"btn btn--positive btn-browse-create\">Create</button>\n                        "
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.isDeletable : depth0),{"name":"if","hash":{},"fn":this.program(5, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\n                    </div>\n                    <!--"
+	    + ((stack1 = __default(__webpack_require__(43)).call(depth0,(depth0 != null ? depth0.collectionOwner : depth0),"===","PUBLISHING_SUPPORT",{"name":"ifCond","hash":{},"fn":this.program(7, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "-->\n                </div>\n                "
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.children : depth0),{"name":"if","hash":{},"fn":this.program(9, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "            </li>\n        </ul>\n    </nav>\n</section>";
+	},"usePartial":true,"useData":true});
 
 /***/ },
 /* 43 */
@@ -20203,11 +20255,148 @@
 /* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Handlebars = __webpack_require__(29);
+	function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(depth0,helpers,partials,data) {
+	    var stack1, alias1=this.lambda, alias2=this.escapeExpression;
+
+	  return " \n    <li class=\"js-browse__item "
+	    + ((stack1 = helpers.unless.call(depth0,(depth0 != null ? depth0.uri : depth0),{"name":"unless","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\" data-url=\""
+	    + alias2(alias1((depth0 != null ? depth0.uri : depth0), depth0))
+	    + "\">\n        <span class=\"page__container "
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.deleteMarker : depth0),{"name":"if","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\">\n            <span class=\"js-browse__item-title page__item"
+	    + ((stack1 = helpers.unless.call(depth0,(depth0 != null ? depth0.uri : depth0),{"name":"unless","hash":{},"fn":this.program(6, data, 0),"inverse":this.program(8, data, 0),"data":data})) != null ? stack1 : "")
+	    + "\">"
+	    + alias2(alias1(((stack1 = (depth0 != null ? depth0.description : depth0)) != null ? stack1.title : stack1), depth0))
+	    + ((stack1 = helpers['if'].call(depth0,((stack1 = (depth0 != null ? depth0.description : depth0)) != null ? stack1.edition : stack1),{"name":"if","hash":{},"fn":this.program(10, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "</span>\n            <span class=\"page__buttons page__buttons--list\">\n\n                <span class=\"page__primary-buttons js-browse__buttons--primary "
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.deleteMarker : depth0),{"name":"if","hash":{},"fn":this.program(12, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\">\n                    <button class=\"btn btn--primary btn-browse-edit\">Edit</button>\n                    <button class=\"btn btn--positive btn-browse-create\">Create</button>\n                </span>\n\n\n                <button class=\"btn btn--primary btn-browse-delete-revert "
+	    + ((stack1 = __default(__webpack_require__(43)).call(depth0,(depth0 != null ? depth0.deleteIsInCollection : depth0),"&&",(depth0 != null ? depth0.deleteMarker : depth0),{"name":"ifCond","hash":{},"fn":this.program(14, data, 0),"inverse":this.program(12, data, 0),"data":data})) != null ? stack1 : "")
+	    + "\">Revert deletion</button>\n"
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.deleteMarker : depth0),{"name":"if","hash":{},"fn":this.program(16, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\n"
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.isDeletable : depth0),{"name":"if","hash":{},"fn":this.program(19, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "            </span>\n        </span>\n        "
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.children : depth0),{"name":"if","hash":{},"fn":this.program(24, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "    </li>\n";
+	},"2":function(depth0,helpers,partials,data) {
+	    return "js-browse__item--directory";
+	},"4":function(depth0,helpers,partials,data) {
+	    return "deleted";
+	},"6":function(depth0,helpers,partials,data) {
+	    return " page__item--directory";
+	},"8":function(depth0,helpers,partials,data) {
+	    return " page__item--"
+	    + this.escapeExpression(this.lambda((depth0 != null ? depth0.type : depth0), depth0));
+	},"10":function(depth0,helpers,partials,data) {
+	    var stack1;
+
+	  return "\n                : "
+	    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.description : depth0)) != null ? stack1.edition : stack1), depth0));
+	},"12":function(depth0,helpers,partials,data) {
+	    return "hidden";
+	},"14":function(depth0,helpers,partials,data) {
+	    return "";
+	},"16":function(depth0,helpers,partials,data) {
+	    var stack1;
+
+	  return "                    "
+	    + ((stack1 = helpers.unless.call(depth0,(depth0 != null ? depth0.deleteIsInCollection : depth0),{"name":"unless","hash":{},"fn":this.program(17, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\n";
+	},"17":function(depth0,helpers,partials,data) {
+	    return "* this file has been delete in another collection";
+	},"19":function(depth0,helpers,partials,data) {
+	    var stack1;
+
+	  return "                    <span class=\"js-browse__buttons--secondary "
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.deleteMarker : depth0),{"name":"if","hash":{},"fn":this.program(12, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\">\n                        <button class=\"js-browse__menu hamburger-icon hamburger-icon--page-item\">\n                            <span class=\"hamburger-icon__span\">toggle menu</span>\n                        </button>\n\n                        <span class=\"page__menu\">\n"
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.isMoveable : depth0),{"name":"if","hash":{},"fn":this.program(20, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\n"
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.isDeletable : depth0),{"name":"if","hash":{},"fn":this.program(22, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\n                        </span>\n                    </span>\n";
+	},"20":function(depth0,helpers,partials,data) {
+	    return "                                <button class=\"btn btn--primary btn-browse-move\">Move</button>";
+	},"22":function(depth0,helpers,partials,data) {
+	    return "                                <button class=\"btn btn--warning btn-browse-delete\">Delete</button>";
+	},"24":function(depth0,helpers,partials,data) {
+	    var stack1;
+
+	  return " \n            <ul class=\"js-browse__children\">\n                "
+	    + ((stack1 = this.invokePartial(__webpack_require__(44),depth0,{"name":"browseNode","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
+	    + " \n            </ul>\n";
+	},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+	    var stack1;
+
+	  return ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.children : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "");
+	},"usePartial":true,"useData":true});
+
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Handlebars = __webpack_require__(29);
+	function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+	module.exports = (Handlebars["default"] || Handlebars).template({"1":function(depth0,helpers,partials,data) {
+	    var stack1;
+
+	  return " \n    <li class=\"js-browse__item\" data-url=\""
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.uri : depth0),{"name":"if","hash":{},"fn":this.program(2, data, 0),"inverse":this.program(4, data, 0),"data":data})) != null ? stack1 : "")
+	    + "\" >\n        <span class=\"page__container\">\n            <span class=\"js-browse__item-title page__item"
+	    + ((stack1 = helpers.unless.call(depth0,(depth0 != null ? depth0.uri : depth0),{"name":"unless","hash":{},"fn":this.program(6, data, 0),"inverse":this.program(8, data, 0),"data":data})) != null ? stack1 : "")
+	    + " "
+	    + ((stack1 = __default(__webpack_require__(43)).call(depth0,((stack1 = (depth0 != null ? depth0.description : depth0)) != null ? stack1.title : stack1),"===","visualisations",{"name":"ifCond","hash":{},"fn":this.program(10, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\">"
+	    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.description : depth0)) != null ? stack1.title : stack1), depth0))
+	    + "</span>\n            <div class=\"page__buttons page__buttons--list\">\n                "
+	    + ((stack1 = helpers.unless.call(depth0,(depth0 != null ? depth0.uri : depth0),{"name":"unless","hash":{},"fn":this.program(12, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "\n"
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.uri : depth0),{"name":"if","hash":{},"fn":this.program(14, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "            </div>\n        </span>\n        "
+	    + ((stack1 = helpers['if'].call(depth0,(depth0 != null ? depth0.children : depth0),{"name":"if","hash":{},"fn":this.program(16, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+	    + "    </li>\n";
+	},"2":function(depth0,helpers,partials,data) {
+	    return this.escapeExpression(this.lambda((depth0 != null ? depth0.uri : depth0), depth0));
+	},"4":function(depth0,helpers,partials,data) {
+	    var stack1;
+
+	  return "/"
+	    + this.escapeExpression(this.lambda(((stack1 = (depth0 != null ? depth0.description : depth0)) != null ? stack1.title : stack1), depth0));
+	},"6":function(depth0,helpers,partials,data) {
+	    return " page__item--directory";
+	},"8":function(depth0,helpers,partials,data) {
+	    return " page__item--"
+	    + this.escapeExpression(this.lambda((depth0 != null ? depth0.type : depth0), depth0));
+	},"10":function(depth0,helpers,partials,data) {
+	    return "datavis-directory";
+	},"12":function(depth0,helpers,partials,data) {
+	    return "<button class=\"btn btn--positive btn-browse-create-datavis\">Upload visualisation</button>";
+	},"14":function(depth0,helpers,partials,data) {
+	    return "                    <button class=\"btn btn--primary btn-browse-edit\">Edit</button>\n";
+	},"16":function(depth0,helpers,partials,data) {
+	    var stack1;
+
+	  return " \n            <ul class=\"js-browse__children\">\n                "
+	    + ((stack1 = this.invokePartial(__webpack_require__(45),depth0,{"name":"browseVisNode","data":data,"helpers":helpers,"partials":partials})) != null ? stack1 : "")
+	    + " \n            </ul>\n";
+	},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+	    var stack1;
+
+	  return ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.children : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "");
+	},"usePartial":true,"useData":true});
+
+/***/ },
+/* 46 */
+/***/ function(module, exports, __webpack_require__) {
+
 	
 	var collectionState = __webpack_require__(8);
 
 	var getBrowseTree =
-	    fetch("/zebedee/collectionBrowseTree/" + collectionState.getCollectionState().id, {credentials: 'include'}).then(function(response) {
+	    fetch("/zebedee/collectionBrowseTree/" + collectionState.get().id, {credentials: 'include'}).then(function(response) {
 	        return response.json();
 	    }).then(function(jsonResponse) {
 	        return jsonResponse;
@@ -20217,6 +20406,80 @@
 
 	module.exports = getBrowseTree;
 
+
+/***/ },
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var store = __webpack_require__(9);
+
+	var userState = {
+
+	    type: {
+
+	        get: function() {
+	            // TODO this is only set on login, if user doesn't login because they have an active session already then it isn't set. We probably need this information from the server (it was stored in localStorage before, which doesn't seem ideal)
+	            return store.getState().user.type;
+	        },
+
+	        set: function(userType) {
+	            store.dispatch({
+	                type: "UPDATE_USER_TYPE",
+	                userType: userType
+	            })
+	        },
+
+	        isDataVis: function() {
+	            return userState.type.get() === "DATA_VISUALISATION";
+	        },
+
+	        isPublisher: function() {
+	            return userState.type.get() === "PUBLISHING_SUPPORT";
+	        }
+	    },
+
+	    email: {
+
+	        get: function() {
+	            return store.getState().user.email;
+	        },
+
+	        set: function(userEmail) {
+	            store.dispatch({
+	                type: "UPDATE_USER_EMAIL",
+	                userEmail: userEmail
+	            })
+	        }
+	    }
+	};
+
+	module.exports = userState;
+
+
+/***/ },
+/* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	var store = __webpack_require__(9);
+
+	var baseUrlState = {
+
+	    get: function() {
+	        return store.getState().baseUrl;
+	    },
+
+	    set: function(baseUrl) {
+	        store.dispatch({
+	            type: "UPDATE_BASE_URL",
+	            baseUrl: baseUrl
+	        });
+	    }
+
+	};
+
+	module.exports = baseUrlState;
 
 /***/ }
 /******/ ]);
