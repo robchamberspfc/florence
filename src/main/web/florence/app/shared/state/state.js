@@ -14,10 +14,10 @@ var createStore = Redux.createStore,
             type: ""
         },
         activeView: {
-            name: "editor",
-            collectionData: {}
+            name: "editor"
         },
         editor: {
+            collectionData: {},
             activeScreen: "",
             activeUrl: "",
             previewUrl: "",
@@ -52,6 +52,9 @@ function florence(state, action) {
         case ("UPDATE_ACTIVE_EDITOR_SCREEN"): {
             newState.editor.activeScreen = action.activeId;
             break;
+        }
+        case ("UPDATE_COLLECTION_DATA"): {
+            newState.editor.collectionData = action.collectionData;
         }
     }
 

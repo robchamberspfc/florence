@@ -1,14 +1,13 @@
 
 var collectionState = require('shared/state/collectionState');
 
-var getBrowseTree = new Promise(function(resolve, reject) {
+var getBrowseTree =
     fetch("/zebedee/collectionBrowseTree/" + collectionState.getCollectionState().id, {credentials: 'include'}).then(function(response) {
         return response.json();
     }).then(function(jsonResponse) {
-        resolve(jsonResponse);
+        return jsonResponse;
     }).catch(function(error) {
-       reject(error)
+       return error
     });
-});
 
 module.exports = getBrowseTree;

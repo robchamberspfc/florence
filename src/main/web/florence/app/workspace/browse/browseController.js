@@ -3,15 +3,10 @@ var browseView = require('workspace/browse/browseView'),
 
 var browseController = {
     init: function () {
-        this.getBrowseTreeData.then(function(browseTreeData) {
+        getBrowseTree.then(function(browseTreeData) {
             browseView.render(browseTreeData);
         });
-    },
-    getBrowseTreeData: new Promise(function(resolve) {
-        getBrowseTree.then(function (response) {
-            resolve(response);
-        })
-    })
+    }
 };
 
 module.exports = browseController;

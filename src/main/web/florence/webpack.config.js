@@ -10,8 +10,18 @@ module.exports = {
     },
     module: {
         loaders: [
-            {test: /\.json$/, loader: 'json-loader'},
-            {test: /\.handlebars$/, loader: "handlebars-loader?helperDirs[]=" + __dirname + "/app/shared/templateHelpers"}
+            {
+                test: /\.json$/,
+                loader: 'json-loader'
+            },
+            {
+                test: /\.handlebars$/,
+                loader: "handlebars-loader",
+                query: {
+                    helperDirs: [__dirname + "/app/shared/templateHelpers"],
+                    compat: ''
+                }
+            }
         ],
         noParse: [
             /node_modules\\json-schema\\lib\\validate\.js/,
