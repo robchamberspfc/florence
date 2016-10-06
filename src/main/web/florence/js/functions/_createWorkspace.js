@@ -299,10 +299,10 @@ function browseScrollPos() {
             navHeight = $('.nav').height();
 
         if (selectedTop < browseTop) {
-            console.log('Item was outside of viewable browse tree');
+            console.log('Item was above of viewable browse tree');
             $browseTree.scrollTop($browseTree.scrollTop() + (selectedTop) - (navHeight / 2));
         } else if (selectedBottom > browseBottom) {
-            console.log('Item was outside of viewable browse tree');
+            console.log('Item was below viewable browse tree');
             $browseTree.scrollTop(selectedBottom - (navHeight / 2) - $selectedItem.height())
         }
     }

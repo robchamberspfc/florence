@@ -22,4 +22,8 @@
         position: absolute;
         //background: $quill-gray;
     }
+
+    &--scrollable {
+        overflow-y: scroll;
+    }
 }
