@@ -64,16 +64,19 @@ var browseView = {
     pageMenu: {
 
         show: function($selectedItem) {
-            $selectedItem
-                .find('.page__container.selected')
-                .find('.js-browse__buttons--primary').addClass('active')
-                .find('.js-browse__menu').addClass('active')
-                .children('.hamburger-icon__span').addClass('active')
-                .next('.page__menu').addClass('active');
+            var $menuButton = $selectedItem.find('.js-browse__menu');
+
+            $selectedItem.find('.js-browse__buttons--primary').addClass('active');
+            $menuButton.addClass('active').children('.hamburger-icon__span').addClass('active');
+            $menuButton.next('.page__menu').addClass('active');
         },
 
         hide: function($selectedItem) {
+            var $menuButton = $selectedItem.find('.js-browse__menu');
 
+            $selectedItem.find('.js-browse__buttons--primary').removeClass('active');
+            $menuButton.removeClass('active').children('.hamburger-icon__span').removeClass('active');
+            $menuButton.next('.page__menu').removeClass('active');
         }
     }
 };

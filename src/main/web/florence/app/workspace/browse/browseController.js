@@ -49,40 +49,57 @@ var browseController = {
     bindNodeClick: function() {
         $('.js-browse__item-title').click(function() {
             var $this = $(this),
-                $thisItem = $this.closest('.js-browse__item'),
-                url = $thisItem.attr('data-url');
+                url = $this.closest('.js-browse__item').attr('data-url');
 
             if (url) {
-                browseView.selectPage(url);
+                browseController.selectBrowseNodeByUrl(url, $this);
+            } else {
+                // Must be a directory if it has no URL
+                browseView.displayChildren($this);
+                browseView.selectDirectories($this);
+                browseView.scrollSelectedItemIntoView($this);
             }
-
-            browseView.displayChildren($this);
-            browseView.selectDirectories($this);
-            browseView.scrollSelectedItemIntoView($this);
 
             if (userState.type.isPublisher()) {
                 // TODO update iframe to new URL
             }
         });
-
-
     },
 
     bindPageButtonsClick: function() {
-        var $selecedItem = $('.js-browse__item.selected');
+        var $browseTreeItems = $('.js-browse__item');
 
-        $selecedItem.find('.js-browse__edit').click(function() {
+        $browseTreeItems.find('.js-browse__edit').click(function() {
             console.log('edit');
         });
 
-        $selecedItem.find('.js-browse__create').click(function() {
+        $browseTreeItems.find('.js-browse__create').click(function() {
             console.log('create');
         });
 
-        $selecedItem.find('.js-browse__menu').click(function() {
-            browseView.pageMenu.show($selecedItem);
+        $browseTreeItems.find('.js-browse__menu').click(function() {
+            var $selectedItem = $(this).closest('.js-browse__item');
+            if (!$selectedItem.find('.js-browse__menu').hasClass('active')) {
+                browseView.pageMenu.show($selectedItem);
+            } else {
+                browseView.pageMenu.hide($selectedItem);
+            }
         });
+    },
+
+    selectBrowseNodeByUrl: function(url, $this) {
+        // $this can be passed in (eg via a click) or will be created from URL when not being passed in (eg when node is being selected programmatically)
+        $this = $this ? $this : $('[data-url="' + url + '"]');
+
+        // Hide secondary buttons for currently selected item (will gracefully fail if there's no selected item with displayed secondary buttons)
+        browseView.pageMenu.hide($('.js-browse__item.selected'));
+
+        browseView.selectPage(url);
+        browseView.displayChildren($this);
+        browseView.selectDirectories($this);
+        browseView.scrollSelectedItemIntoView($this);
     }
+
 };
 
 module.exports = browseController;
