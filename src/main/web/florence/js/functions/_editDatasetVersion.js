@@ -443,12 +443,12 @@ function initialiseDatasetVersion(collectionId, data, templateData, field, idFie
                 closeOnConfirm: false
             }, function (result) {
                 if (result === true) {
-                    swal({
-                        title: "Deleted",
-                        text: "This " + idField + " version has been deleted",
-                        type: "success",
-                        timer: 2000
-                    });
+                    // swal({
+                    //     title: "Deleted",
+                    //     text: "This " + idField + " version has been deleted",
+                    //     type: "success",
+                    //     timer: 2000
+                    // });
                     var pathToDelete = data.uri;
                     var fileToDelete = pathToDelete + '/' + data.downloads[0].file;  //Saves always the latest
                     var uriToDelete = $('#' + idField + '-edition_' + index).attr(idField + '-url');
@@ -477,7 +477,7 @@ function initialiseDatasetVersion(collectionId, data, templateData, field, idFie
                             handleApiError(error);
                         });
 
-                        cleanUpGeneratedTimeSeriesFiles(fileToDelete, pathToDelete, collectionId);
+                        cleanUpGeneratedTimeSeriesFiles(pathToDelete, collectionId);
 
                     }, function (response) {
                         if (response.status === 404) {
@@ -494,14 +494,21 @@ function initialiseDatasetVersion(collectionId, data, templateData, field, idFie
 
 }
 
-function cleanUpGeneratedTimeSeriesFiles(fileToDelete, uri, collectionId) {
-    console.log("cleanUpGeneratedTimeSeriesFiles");
+function cleanUpGeneratedTimeSeriesFiles(uri, collectionId) {
     var parentUrl = getParentPage(uri);
 
     fetch(parentUrl + '/data', {credentials: 'include'}).then(function(response) {
         return response.json();
     }).then(function(parentData) {
         var _datasetId = parentData.description.datasetId.toUpperCase();
+
+        var alertHtml = templates.loadingAnimation({dark: true, large: true});
+        sweetAlert({
+            title: "Generated files being deleted...",
+            text: alertHtml,
+            showConfirmButton: false,
+            html: true
+        });
 
          $.ajax({
             url: "/zebedee/TimeSeriesContent/" + collectionId + "?datasetId=" + _datasetId,
@@ -512,16 +519,16 @@ function cleanUpGeneratedTimeSeriesFiles(fileToDelete, uri, collectionId) {
             async: "false",
             success: function (response) {
                 if (response.isDelete) {
-                    console.log("Timeseries manifest delete success");
                     swal({
-                        title: "Generated TimeSeries Files deleted.",
+                        title: "Files deleted",
+                        text: "Previously generated file have been deleted",
                         type: "success",
                         timer: 3000
                     });
                 } else {
                     swal({
-                        title: "No generated TimeSeries Files to delete",
-                        type: "success",
+                        title: "No generated time series files to delete",
+                        type: "info",
                         timer: 3000
                     });
                 }
