@@ -65,6 +65,10 @@ function florence(state, action) {
             newState.user.type = action.userType;
             break;
         }
+        case ("UPDATE_IS_DIRTY"): {
+            newState.editor.isDirty = action.isDirty;
+            break;
+        }
     }
 
     console.log('ACTION: ', action);
