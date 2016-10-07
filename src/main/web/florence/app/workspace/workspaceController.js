@@ -12,36 +12,55 @@ var workspaceController = {
     init: function() {
         workspaceView.render();
         navigationController.init();
-        workspaceController.toggleScreenOnStateChange();
+        workspaceController.updateWorkspace.onActiveScreenStateUpdate();
+        workspaceController.updateWorkspace.onActiveUrlStateUpdate();
         workspaceState.activeScreen.set('browse');
     },
 
-    toggleScreenOnStateChange: function() {
-        workspaceState.activeScreen.watch(function(newActiveScreen) {workspaceController.renderActiveScreen(newActiveScreen)});
+    updateWorkspace: {
+
+        onActiveScreenStateUpdate: function() {
+            workspaceState.activeScreen.watch(function(newActiveScreen) {
+                workspaceController.renderActiveScreen(newActiveScreen)
+            });
+        },
+
+        onActiveUrlStateUpdate: function() {
+            workspaceState.activeUrl.watch(function(newValue) {
+                // Switch to browse screen if active url changes on creator or editor
+                if (workspaceState.activeScreen.get() === "create" || workspaceState.activeScreen.get() === "edit") {
+                    workspaceState.activeScreen.set('browse');
+                    return;
+                }
+                // Browse already showing, just update to new node
+                browseController.selectBrowseNodeByUrl(newValue);
+            })
+        }
+
     },
 
     renderActiveScreen: function(activeScreen) {
         switch (activeScreen) {
             case ('browse'): {
-                console.log('Render browse workspace');
+                // console.log('Render browse workspace');
                 navigationController.changeActiveItem(activeScreen);
                 browseController.init();
                 break;
             }
             case ('create'): {
-                console.log('Render create workspace');
+                // console.log('Render create workspace');
                 navigationController.changeActiveItem(activeScreen);
                 createController.init();
                 break;
             }
             case ('edit'): {
-                console.log('Render edit workspace');
+                // console.log('Render edit workspace');
                 navigationController.changeActiveItem(activeScreen);
                 editController.init();
                 break;
             }
             default: {
-                console.log('Screen name "%s" not recognised', activeScreen);
+                console.log('Screen name "%s" is not recognised', activeScreen);
                 break;
             }
         }

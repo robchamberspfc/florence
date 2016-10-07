@@ -13,7 +13,12 @@ var browseController = {
             browseView.render(browseTreeData);
             browseController.bindPageButtonsClick();
             browseController.bindNodeClick();
-            browseController.updateBrowseOnActiveUrlChange();
+            // browseController.toggleBrowseNodeByStateChange();
+
+            if (workspaceState.activeUrl.get().length > 0) {
+                browseController.selectBrowseNodeByUrl(workspaceState.activeUrl.get());
+            }
+            // browseController.toggleBrowseNodeByStateChange();
         }).catch(function(error) {
             console.log(error);
         });
@@ -93,13 +98,8 @@ var browseController = {
         });
     },
 
-    updateBrowseOnActiveUrlChange: function() {
-        workspaceState.activeUrl.watch(function(newValue) {
-            browseController.selectBrowseNodeByUrl(newValue);
-        })
-    },
-
     selectBrowseNodeByUrl: function(url) {
+        console.log('Node selected');
         var $this = $('[data-url="' + url + '"]');
 
         // Hide secondary buttons for currently selected item (will gracefully fail if there's no selected item with displayed secondary buttons)
