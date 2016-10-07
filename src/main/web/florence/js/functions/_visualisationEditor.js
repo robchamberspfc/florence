@@ -23,13 +23,14 @@ function visualisationEditor(collectionId, data) {
 
     // Update hidden select to display all HTML files in ZIP
     var selectOptions = ["<option value=''>-- Select an HTML file to preview --</option>"],
-        $selectWrapper = $('#select-vis-wrapper');
+        $selectWrapper = $('.browser-bar__select');
 
     for (i = 0; i < data.filenames.length; i++) {
         selectOptions.push("<option value='" + data.filenames[i] + "'>" + data.filenames[i] + "</option>")
     }
     $selectWrapper.find('select').empty().append(selectOptions.join(''));
     $selectWrapper.show();
+    $('.browser-bar__buttons').hide();
     $('#browser-location').hide();
     $('.browser.disabled').removeClass('disabled');
 
