@@ -3,8 +3,8 @@ var createTemplate = require('./create.handlebars');
 
 var createView = {
 
-    render: function() {
-        document.getElementById('workspace-browse').innerHTML = createTemplate();
+    render: function(templateData) {
+        document.getElementById('workspace-browse').innerHTML = createTemplate(templateData);
     },
 
     inputHtml: {

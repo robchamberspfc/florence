@@ -5,6 +5,9 @@
         <div class="select-wrap">
             <select id="js-create__page-select" required>
                 <option value="" name=""> --- Select page type --- </option>
+                {{#each this}}
+                    <option value="{{pageType}}" name="{{pageType}}" {{#unless valid}}disabled{{/unless}}>{{title}}</option>
+                {{/each}}
                 {{!-- {{#if dataVis}}
                      <option value="visualisation" name="visualisation" selected>Visualisation</option>
                  {{else}}
