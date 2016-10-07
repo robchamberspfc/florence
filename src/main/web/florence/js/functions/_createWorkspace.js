@@ -40,6 +40,34 @@ function createWorkspace(path, collectionId, menu, collectionData, stopEventList
         var workSpace = templates.workSpace(Florence.babbageBaseUrl + safePath);
         $('.section').html(workSpace);
 
+        // catch enter clicks on uri input
+        $('.js-browser-location-form').submit(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var uriToOpen = $('#browser-location').val();
+            $('#iframe').attr('src', uriToOpen);
+            treeNodeSelect(uriToOpen);
+        });
+
+        // bind 'go' button
+        $('.js-browser-bar-go').click(function() {
+            var uriToOpen = $('#browser-location').val();
+            $('#iframe').attr('src', uriToOpen);
+            treeNodeSelect(uriToOpen);
+        });
+
+        // bind new window button
+        $('.js-browser-bar-new-window').click(function() {
+            var uriToOpen = $('#browser-location').val();
+            window.open(uriToOpen);
+        });
+
+        // bind json view button
+        $('.js-browser-bar-json').click(function() {
+            var uriToOpen = $('#browser-location').val();
+            window.open(uriToOpen + '/data');
+        });
+
         // Store nav objects
         var $nav = $('.js-workspace-nav'),
             $navItem = $nav.find('.js-workspace-nav__item');
