@@ -18,6 +18,7 @@ var createStore = Redux.createStore,
         },
         workspace: {
             collectionData: {},
+            browseTreeData: {},
             activeScreen: "",
             activeUrl: "",
             previewUrl: "",
@@ -49,6 +50,10 @@ function florence(state, action) {
             newState.baseUrl = action.baseUrl;
             break;
         }
+        case ("UPDATE_BROWSE_TREE_DATA"): {
+            newState.workspace.browseTreeData = action.browseTreeData;
+            break;
+        }
         case ("UPDATE_ACTIVE_WORKSPACE_SCREEN"): {
             newState.workspace.activeScreen = action.activeScreen;
             break;
@@ -73,12 +78,16 @@ function florence(state, action) {
             newState.editor.isDirty = action.isDirty;
             break;
         }
+        default: {
+            console.log("State action type not recognised");
+            break;
+        }
     }
 
-    console.log('ACTION: ', action);
-    console.log('OLD STATE: ', state);
-    console.log('NEW STATE: ', newState);
-    console.log('--------');
+    // console.log('ACTION: ', action);
+    // console.log('OLD STATE: ', state);
+    // console.log('NEW STATE: ', newState);
+    // console.log('--------');
 
     return newState
 }

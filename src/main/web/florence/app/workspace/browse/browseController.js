@@ -8,10 +8,12 @@ var browseController = {
 
     init: function () {
         getBrowseTree().then(function(browseTreeData){
+            workspaceState.browseTreeData.set(browseTreeData);
             browseController.addDeleteMarkersToData(browseTreeData);
             browseView.render(browseTreeData);
             browseController.bindPageButtonsClick();
             browseController.bindNodeClick();
+            browseController.updateBrowseOnActiveUrlChange();
         }).catch(function(error) {
             console.log(error);
         });
@@ -55,9 +57,9 @@ var browseController = {
             var url = $(this).closest('.js-browse__item').attr('data-url');
 
             if (url) {
-                browseController.selectBrowseNodeByUrl(url);
+                workspaceState.activeUrl.set(url);
             } else {
-                // Must be a directory if it has no URL
+                // Has no url so must be a directory
                 var $this = $(this);
                 browseView.displayChildren($this);
                 browseView.selectDirectories($this);
@@ -74,11 +76,11 @@ var browseController = {
         var $browseTreeItems = $('.js-browse__item');
 
         $browseTreeItems.find('.js-browse__edit').click(function() {
-            console.log('edit');
+            workspaceState.activeScreen.set('edit');
         });
 
         $browseTreeItems.find('.js-browse__create').click(function() {
-            console.log('create');
+            workspaceState.activeScreen.set('create');
         });
 
         $browseTreeItems.find('.js-browse__menu').click(function() {
@@ -89,6 +91,12 @@ var browseController = {
                 browseView.pageMenu.hide($selectedItem);
             }
         });
+    },
+
+    updateBrowseOnActiveUrlChange: function() {
+        workspaceState.activeUrl.watch(function(newValue) {
+            browseController.selectBrowseNodeByUrl(newValue);
+        })
     },
 
     selectBrowseNodeByUrl: function(url) {

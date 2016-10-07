@@ -4,6 +4,21 @@ var store = require('shared/state/state.js'),
 
 var workspaceState = {
 
+    browseTreeData: {
+
+        get: function() {
+            return store.getState().workspace.browseTreeData;
+        },
+
+        set: function(browseTreeData) {
+            store.dispatch({
+                type: "UPDATE_BROWSE_TREE_DATA",
+                browseTreeData: browseTreeData
+            })
+        }
+
+    },
+
     activeScreen: {
 
         get: function() {

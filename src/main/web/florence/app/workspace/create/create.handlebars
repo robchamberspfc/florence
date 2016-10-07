@@ -1,4 +1,4 @@
-<section class="panel workspace-create">
+<section class="panel workspace-create" id="js-create">
     <h1>New page details</h1>
     <form>
         <label for="js-create__page-select" class="hidden">Page type</label>
@@ -28,7 +28,7 @@
                  {{/if}} --}}
             </select>
         </div>
-        <div class="edition"></div>
+        <div id="js-create__extra-inputs"></div>
         <label for="pagename" class="hidden">Page name</label>
         <input id="pagename" class="full" type="text" placeholder="Page name"/>
         <button class="btn btn--positive margin-left--0 btn-page-create">Create page</button>
