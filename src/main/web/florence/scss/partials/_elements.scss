@@ -140,10 +140,10 @@ select {
 
     // Specifically for the select used in the browser/preview
     &--browser {
-        display: none;
+        //display: none;
         height: 28px;
-        width: 80%;
-        margin-left: 20%;
+        width: 100%;
+        //margin-left: 20%;
 
         & select {
            padding: 0 $gutter;
