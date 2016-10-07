@@ -1,11 +1,11 @@
 
-var nodeTemplate = require('./browse.handlebars'),
+var browseTemplate = require('./browse.handlebars'),
     getBrowseTree = require('shared/api/getBrowseTree');
 
 var browseView = {
 
     render: function (browseTreeData) {
-        document.getElementById('workspace-browse').innerHTML = nodeTemplate(browseTreeData);
+        document.getElementById('workspace-browse').innerHTML = browseTemplate(browseTreeData);
     },
 
     selectDirectories: function($this) {

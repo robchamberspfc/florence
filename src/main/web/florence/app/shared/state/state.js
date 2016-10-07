@@ -1,6 +1,6 @@
 
 /* Imports */
-var Redux = require('redux'),
+var Redux = require('redux');
     watch = require('redux-watch');
 
 /* Create store */
@@ -16,7 +16,7 @@ var createStore = Redux.createStore,
         activeView: {
             name: "editor"
         },
-        editor: {
+        workspace: {
             collectionData: {},
             activeScreen: "",
             activeUrl: "",
@@ -28,11 +28,11 @@ var createStore = Redux.createStore,
     },
     store = createStore(florence);
 
-/* Watch store changes */
-var watchStore = watch(store.getState, 'user.email');
-store.subscribe(watchStore(function(newVal, oldVal, objectPath) {
-    console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
-}));
+/* Watch store changes example */
+// var watchStore = watch(store.getState, 'workspace.activeScreen');
+// store.subscribe(watchStore(function(newVal, oldVal, objectPath) {
+//     console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
+// }));
 
 function florence(state, action) {
     // Set initial state
@@ -49,12 +49,16 @@ function florence(state, action) {
             newState.baseUrl = action.baseUrl;
             break;
         }
-        case ("UPDATE_ACTIVE_EDITOR_SCREEN"): {
-            newState.editor.activeScreen = action.activeId;
+        case ("UPDATE_ACTIVE_WORKSPACE_SCREEN"): {
+            newState.workspace.activeScreen = action.activeScreen;
+            break;
+        }
+        case ("UPDATE_WORKSPACE_ACTIVE_URL"): {
+            newState.workspace.activeUrl = action.activeUrl;
             break;
         }
         case ("UPDATE_COLLECTION_DATA"): {
-            newState.editor.collectionData = action.collectionData;
+            newState.workspace.collectionData = action.collectionData;
             break;
         }
         case ("UPDATE_USER_EMAIL"): {

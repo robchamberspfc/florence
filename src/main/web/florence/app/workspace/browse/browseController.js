@@ -1,15 +1,19 @@
 var browseView = require('workspace/browse/browseView'),
     getBrowseTree = require('shared/api/getBrowseTree'),
     userState = require('shared/state/userState'),
+    workspaceState = require('shared/state/workspaceState'),
     collectionState = require('shared/state/collectionState');
 
 var browseController = {
+
     init: function () {
-        getBrowseTree.then(function(browseTreeData) {
+        getBrowseTree().then(function(browseTreeData){
             browseController.addDeleteMarkersToData(browseTreeData);
             browseView.render(browseTreeData);
             browseController.bindPageButtonsClick();
             browseController.bindNodeClick();
+        }).catch(function(error) {
+            console.log(error);
         });
     },
 
@@ -48,13 +52,13 @@ var browseController = {
 
     bindNodeClick: function() {
         $('.js-browse__item-title').click(function() {
-            var $this = $(this),
-                url = $this.closest('.js-browse__item').attr('data-url');
+            var url = $(this).closest('.js-browse__item').attr('data-url');
 
             if (url) {
-                browseController.selectBrowseNodeByUrl(url, $this);
+                browseController.selectBrowseNodeByUrl(url);
             } else {
                 // Must be a directory if it has no URL
+                var $this = $(this);
                 browseView.displayChildren($this);
                 browseView.selectDirectories($this);
                 browseView.scrollSelectedItemIntoView($this);
@@ -87,9 +91,8 @@ var browseController = {
         });
     },
 
-    selectBrowseNodeByUrl: function(url, $this) {
-        // $this can be passed in (eg via a click) or will be created from URL when not being passed in (eg when node is being selected programmatically)
-        $this = $this ? $this : $('[data-url="' + url + '"]');
+    selectBrowseNodeByUrl: function(url) {
+        var $this = $('[data-url="' + url + '"]');
 
         // Hide secondary buttons for currently selected item (will gracefully fail if there's no selected item with displayed secondary buttons)
         browseView.pageMenu.hide($('.js-browse__item.selected'));

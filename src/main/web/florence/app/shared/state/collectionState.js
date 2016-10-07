@@ -4,7 +4,7 @@ var store = require('shared/state/state.js');
 var collectionState = {
 
     get: function () {
-        return store.getState().editor.collectionData;
+        return store.getState().workspace.collectionData;
     },
 
     set: function (collectionData) {

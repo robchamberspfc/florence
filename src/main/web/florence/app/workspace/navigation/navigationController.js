@@ -1,33 +1,23 @@
 var navigationView = require('workspace/navigation/navigationView'),
-    store = require('shared/state/state.js');
+    workspaceState = require('shared/state/workspaceState');
 
 var navigationController = {
 
     init: function() {
         navigationView.render();
         this.bindClicks();
-        this.updateActiveInState('browse');
+        // workspaceState.activeScreen.set('browse');
     },
 
     bindClicks: function () {
-        var $navItems = $('.js-workspace-nav__item');
-        $navItems.click(function() {
-            var $this = $(this);
-            navigationController.setActiveItem($navItems, $this.closest('li'));
-            navigationController.updateActiveInState($this.attr('id'));
+        $('.js-workspace-nav__item').click(function() {
+            var item = $(this).attr('id');
+            workspaceState.activeScreen.set(item);
         });
     },
 
-    setActiveItem: function($allItems, $activeItem) {
-        $allItems.removeClass('selected');
-        $activeItem.addClass('selected');
-    },
-
-    updateActiveInState: function(activeId) {
-        store.dispatch({
-            type: "UPDATE_ACTIVE_EDITOR_SCREEN",
-            activeId: activeId
-        })
+    changeActiveItem: function(item) {
+        navigationView.renderActiveItem(item);
     }
 };
 
