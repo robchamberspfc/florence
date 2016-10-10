@@ -5,7 +5,8 @@ var workspaceView = require('workspace/workspaceView'),
     browseController = require('workspace/browse/browseController'),
     editController = require('workspace/edit/editController'),
     createController = require('workspace/create/createController'),
-    workspaceState = require('shared/state/workspaceState');
+    workspaceState = require('shared/state/workspaceState'),
+    previewController = require('workspace/preview/previewController');
 
 var workspaceController = {
 
@@ -34,6 +35,7 @@ var workspaceController = {
                 }
                 // Browse already showing, just update to new node
                 browseController.selectBrowseNodeByUrl(newValue);
+                previewController.updatePreview(newValue);
             })
         }
 
@@ -64,6 +66,8 @@ var workspaceController = {
                 break;
             }
         }
+        browseController.init();
+        previewController.init();
     }
 
 };
