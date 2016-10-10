@@ -15,29 +15,11 @@ var previewController = {
     bindPreviewClick: function() {
         // catch babbage onunload message
         window.addEventListener("message", function (e) {
-            console.log(e);
             previewController.handlePreviewClick();
         });
     },
 
     handlePreviewClick: function() {
-
-        // var previewUri = this.getPreviewUri();
-        // var workspaceActiveUri = workspaceState.activeUrl.get();
-        //
-        // console.log ('prev: ', previewUri, 'active: ', workspaceActiveUri);
-
-        // if (previewUri != "/blank") {
-        //
-        //     // update address bar
-        //     this.addressBar.set(previewUri);
-        //     // update active url
-        //     workspaceState.activeUrl.set(previewUri);
-        //
-        // }
-
-        //console.log('Preview clicked, new uri: ', previewController.getPreviewUri());
-        //console.log('isDirty.get: ', workspaceState.isDirty.get());
 
         if (!workspaceState.isDirty.get()) {
 
@@ -58,11 +40,6 @@ var previewController = {
     },
 
     updatePreview: function(uri) {
-        console.log('base: ',baseUrlState.get());
-        console.log('uri param: ', uri);
-        console.log('param to render', baseUrlState.get() + uri);
-
-        console.log('document.getElementById(iframe).contentWindow.location.pathname: ', document.getElementById('iframe').contentWindow.location.pathname);
         previewView.render(baseUrlState.get() + uri);
     },
 
@@ -70,7 +47,6 @@ var previewController = {
 
         var parsedUri = document.getElementById('iframe').contentWindow.location.pathname;
         if (parsedUri == 'blank') {console.log('WAS BLANK'); parsedUri = workspaceState.activeUrl.get()}
-        console.log('getPreviewUri ran!!', parsedUri);
         return utilities.checkPathSlashes(parsedUri);
     },
 
