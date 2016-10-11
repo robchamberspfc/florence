@@ -6,10 +6,53 @@ var createController = {
 
     init: function() {
         createView.render(createController.validPageOptions(workspaceState.activeUrl.get()));
+        this.bindPageTypeSelection();
     },
 
-    pageInputs: function() {
+    buildInputs: function(id) {
+        /* Get string of inputs HTML and request view to render it */
+        var inputHtml;
 
+        switch (id) {
+            case ("bulletin"): {
+                inputHtml = this.getInputsForPageType.bulletin();
+                break;
+            }
+            case ("dataset_landing_page"): {
+                inputHtml = this.getInputsForPageType.datasetLandingPage();
+                break;
+            }
+            case ("timeseries_dataset_landing_page"): {
+                inputHtml = this.getInputsForPageType.datasetLandingPage();
+                break;
+            }
+        }
+
+        createView.renderOptionalInputs(inputHtml);
+    },
+
+    getInputsForPageType: {
+        /* Load create screen for different page types */
+
+        bulletin: function() {
+            var inputs = [];
+            inputs.push(createView.inputHtml.pageEdition());
+            inputs.push(createView.inputHtml.releaseDate());
+            return inputs.join('');
+        },
+
+        datasetLandingPage: function() {
+            var inputs = [];
+            inputs.push(createView.inputHtml.releaseDate());
+            return inputs.join('');
+        }
+
+    },
+
+    bindPageTypeSelection: function() {
+        $("#js-create__page-select").change(function() {
+            createController.buildInputs($(this).val());
+        });
     },
 
     findNodeInBrowseTreeByUri: function(uri) {
@@ -45,19 +88,38 @@ var createController = {
             validPageTypes = [];
 
         switch (pageType) {
+            case ("home_page"): {
+                validPageTypes = [
+                    "visualisation",
+                    "release"
+                ];
+                break;
+            }
             case ("product_page"): {
                 validPageTypes = [
                     "bulletin",
                     "article",
-                    "article_download"
+                    "article_download",
+                    "compendium_landing_page",
+                    "static_methodology",
+                    "static_methodology_download",
+                    "static_qmi",
+                    "static_adhoc",
+                    "dataset_landing_page",
+                    "timeseries_dataset_landing_page"
                 ];
                 break;
             }
             case ("bulletin"): {
                 validPageTypes = [
-                    "bulletin",
-                    "article",
-                    "article_download"
+                    "bulletin"
+                ];
+                break;
+            }
+            case ("compendium"): {
+                validPageTypes = [
+                    "compendium_chapter",
+                    "compendium_data"
                 ];
                 break;
             }
@@ -66,74 +128,87 @@ var createController = {
         return validPageTypes;
     },
 
-    allPageOptions: function() {
+    allPageTypeOptions: function() {
+        /* All possible <option> elements that can be used in page type <select> */
         return [
             {
-                pageType: "bulletin",
-                title: "Bulletin"
+                id: "bulletin",
+                title: "Statistical bulletin"
             },
             {
-                pageType: "article",
+                id: "article",
                 title: "Article"
             },
             {
-                pageType: "article_download",
-                title: "Article download"
+                id: "article_download",
+                title: "Article [PDF]"
             },
             {
-                pageType: "compendium_landing_page",
+                id: "compendium_landing_page",
                 title: "Compendium"
             },
             {
-                pageType: "compendium_chapter",
+                id: "compendium_chapter",
                 title: "Compendium chapter"
             },
             {
-                pageType: "compendium_data",
+                id: "compendium_data",
                 title: "Compendium data"
             },
             {
-                pageType: "static_landing_page",
+                id: "static_landing_page",
                 title: "Static landing page"
             },
             {
-                pageType: "static_page",
+                id: "static_page",
                 title: "Static page"
             },
             {
-                pageType: "static_article",
+                id: "static_article",
                 title: "Static article"
             },
             {
-                pageType: "static_foi",
+                id: "static_foi",
                 title: "FOI"
             },
             {
-                pageType: "static_qmi",
+                id: "static_qmi",
                 title: "QMI"
             },
             {
-                pageType: "static_adhoc",
+                id: "static_adhoc",
                 title: "User requested data"
             },
             {
-                pageType: "static_methodology",
+                id: "static_methodology",
                 title: "Methodology article"
             },
             {
-                pageType: "dataset_landing_page",
+                id: "static_methodology_download",
+                title: "Methodology article [PDF]"
+            },
+            {
+                id: "dataset_landing_page",
                 title: "Dataset landing page"
             },
             {
-                pageType: "timeseries_landing_page",
-                title: "Timeseries dataset landing page"
+                id: "timeseries_dataset_landing_page",
+                title: "Timeseries data landing page"
             },
             {
-                pageType: "visualisation",
+                id: "dataset",
+                title: "Dataset"
+            },
+            {
+                id: "timeseries_dataset",
+                title: "Timeseries dataset"
+            },
+            {
+                id: "visualisation",
                 title: "Data visualisation"
             },
             {
-                pageType: "release",
+                id: "release",
                 title: "Calendar entry"
             }
         ];
@@ -142,20 +217,20 @@ var createController = {
     validPageOptions: function(uri) {
         var validPageTypes = createController.getValidPageTypesForLocation(uri),
             validPageTypesLength = validPageTypes.length,
-            allPageOptions = createController.allPageOptions(),
-            allPageOptionsLength = allPageOptions.length,
+            validPageOptions = createController.allPageTypeOptions(),
+            validPageOptionsLength = validPageOptions.length,
             index,
             nestedIndex;
 
-        for (index = 0; index < allPageOptionsLength; index++) {
+        for (index = 0; index < validPageOptionsLength; index++) {
             for (nestedIndex = 0; nestedIndex < validPageTypesLength; nestedIndex++) {
-                if (allPageOptions[index].pageType == validPageTypes[nestedIndex]) {
-                    allPageOptions[index].valid = true;
+                if (validPageOptions[index].id == validPageTypes[nestedIndex]) {
+                    validPageOptions[index].valid = true;
                 }
             }
         }
 
-        return allPageOptions;
+        return validPageOptions;
     }
 
 };
