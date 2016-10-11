@@ -57,6 +57,19 @@ var workspaceState = {
                 onChange(newValue);
             });
         }
+    },
+
+    isDirty: {
+        get: function() {
+            return store.getState().workspace.isDirty;
+        },
+
+        set: function(bool) {
+            store.dispatch({
+                type: "UPDATE_IS_DIRTY",
+                isDirty: bool
+            })
+        }
     }
 
 };
