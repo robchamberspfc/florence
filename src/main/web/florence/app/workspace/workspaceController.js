@@ -47,6 +47,7 @@ var workspaceController = {
                 // console.log('Render browse workspace');
                 navigationController.changeActiveItem(activeScreen);
                 browseController.init();
+                previewController.init();
                 break;
             }
             case ('create'): {
@@ -59,6 +60,7 @@ var workspaceController = {
                 // console.log('Render edit workspace');
                 navigationController.changeActiveItem(activeScreen);
                 editController.init();
+                previewController.init();
                 break;
             }
             default: {
@@ -66,8 +68,6 @@ var workspaceController = {
                 break;
             }
         }
-        browseController.init();
-        previewController.init();
     }
 
 };

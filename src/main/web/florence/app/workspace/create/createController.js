@@ -1,6 +1,7 @@
 
 var createView = require('workspace/create/createView'),
-    workspaceState = require('shared/state/workspaceState');
+    workspaceState = require('shared/state/workspaceState'),
+    bindDatePicker = require('shared/utilities/bindDatePicker');
 
 var createController = {
 
@@ -9,49 +10,116 @@ var createController = {
         this.bindPageTypeSelection();
     },
 
-    buildInputs: function(id) {
-        /* Get string of inputs HTML and request view to render it */
-        var inputHtml;
+    bindFormSubmit: function() {
+        var $form = $('#js-create__form'),
+            formData;
 
-        switch (id) {
-            case ("bulletin"): {
-                inputHtml = this.getInputsForPageType.bulletin();
-                break;
-            }
-            case ("dataset_landing_page"): {
-                inputHtml = this.getInputsForPageType.datasetLandingPage();
-                break;
-            }
-            case ("timeseries_dataset_landing_page"): {
-                inputHtml = this.getInputsForPageType.datasetLandingPage();
-                break;
-            }
-        }
+        $form.off().submit(function(event) {
+            event.preventDefault();
+            formData = new FormData(this);
 
-        createView.renderOptionalInputs(inputHtml);
+            if (createController.validateForm(formData)) {
+                console.log("Submit form data to API");
+            }
+
+        });
     },
 
-    getInputsForPageType: {
-        /* Load create screen for different page types */
+    validateForm: function(formData) {
 
-        bulletin: function() {
-            var inputs = [];
-            inputs.push(createView.inputHtml.pageEdition());
-            inputs.push(createView.inputHtml.releaseDate());
-            return inputs.join('');
-        },
+        // Clear any existing errors from form so we start with a blank slate
+        createView.renderInputError.clearAll();
 
-        datasetLandingPage: function() {
-            var inputs = [];
-            inputs.push(createView.inputHtml.releaseDate());
-            return inputs.join('');
+
+        /* Validate each key that could exist in form data */
+
+        if (formData.has("pageType")) {
+            if (formData.get("pageType") === "noneSelected") {
+                createView.renderInputError.pageType("Please select a page type");
+                return false;
+            }
         }
+
+        if (formData.has("edition")) {
+            var editionValue = formData.get("edition");
+            if (editionValue.toLowerCase() === "latest" || editionValue.toLowerCase() === "data" || editionValue.toLowerCase() === "previousreleases" || editionValue.toLowerCase() === "current") {
+                createView.renderInputError.edition("'" + editionValue + "'" + " is a reserved path so it can't be used as an edition title");
+                return false;
+            }
+            if (!editionValue) {
+                createView.renderInputError.edition("'Edition' field can't be left empty");
+                return false;
+            }
+        }
+
+        return true;
+    },
+
+    buildInputs: function(selectedOptionId) {
+        /* Get string of inputs HTML and request view to render it */
+        var inputsArray = this.inputsForPageType[this.mapOptionIdToPageTypeId(selectedOptionId)],
+            inputsArrayLength = inputsArray.length,
+            i;
+
+        // Empty any existing optional inputs from DOM
+        createView.optionalInputs.empty();
+
+        // Go through array and build up new array of HTML returned for input type from view
+        for (i = 0; i < inputsArrayLength; i++) {
+            var inputHtml = (createView.inputHtml(inputsArray[i]));
+            createView.optionalInputs.append(inputHtml);
+
+            // Bind date picker pop-up on focus of input - pull this out to a separate function if it starts being used for more inputs
+            if (inputsArray[i] === "releaseDate") {
+                bindDatePicker();
+            }
+        }
+
+    },
+
+    mapOptionIdToPageTypeId: function(selectedOptionId) {
+        // Get page type for the selected option
+        switch (selectedOptionId) {
+            case ("noneSelected"): {
+                return "noneSelected";
+            }
+            case ("bulletin"): {
+                return "bulletin";
+            }
+            case ("dataset_landing_page"): {
+                return "datasetLandingPage";
+            }
+            case ("timeseries_dataset_landing_page"): {
+                return "datasetLandingPage";
+            }
+            default: {
+                console.log("Unrecognised selected option id, doesn't map to a page type");
+                return false
+            }
+        }
+    },
+
+    inputsForPageType: {
+        /* Return create screen input types for different page types */
+
+        noneSelected: [],
+
+        bulletin: [
+            "edition",
+            "releaseDate"
+        ],
+
+        datasetLandingPage: [
+            "releaseDate"
+        ]
 
     },
 
     bindPageTypeSelection: function() {
-        $("#js-create__page-select").change(function() {
-            createController.buildInputs($(this).val());
+        $("#pageType").change(function() {
+            var selectOption = $(this).val();
+            createController.buildInputs(selectOption);
+            createController.bindFormSubmit(selectOption);
         });
     },
 
