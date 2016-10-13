@@ -235,6 +235,7 @@ function addEditionEditButton(collectionId, data, templateData) {
             type: "DELETE",
             success: function (res) {
               console.log(res);
+              cleanUpTimeSeriesFiles(collectionId, data.description.datasetId);
             },
             error: function (res) {
               console.log(res);
@@ -249,6 +250,30 @@ function addEditionEditButton(collectionId, data, templateData) {
 
   function sortableSections() {
     $("#sortable-edition").sortable();
+  }
+
+  function cleanUpTimeSeriesFiles(collectionId, _datasetId) {
+      $.ajax({
+          url: "/zebedee/TimeSeriesContent/" + collectionId + "?datasetId=" + _datasetId,
+          type: 'DELETE',
+          cache: false,
+          processData: false,
+          contentType: false,
+          async: "false",
+          success: function (response) {
+              var message = "Generated TimeSeries files deleted.";
+              if (!response.isDelete) {
+                  message = "No generated TimeSeries Files to delete";
+              }
+              swal({
+                  title: message,
+                  type: "success",
+                  timer: 3000
+              });
+          }, error: function(response) {
+              console.log("Timeseries manifest delete error " + response);
+          }
+      });
   }
 
   sortableSections();

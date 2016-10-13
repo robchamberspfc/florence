@@ -518,22 +518,12 @@ function cleanUpGeneratedTimeSeriesFiles(uri, collectionId) {
             contentType: false,
             async: "false",
             success: function (response) {
-                if (response.isDelete) {
-                    swal({
-                        title: "Files deleted",
-                        text: "Previously generated file have been deleted",
-                        type: "success",
-                        timer: 3000
-                    });
-                } else {
-                    swal({
-                        title: "No generated time series files to delete",
-                        type: "info",
-                        timer: 3000
-                    });
+                var message = "Previously generated file have been deleted";
+                if (!response.isDelete) {
+                    message = "No generated time series files to delete";
                 }
-            },
-            error: function(response) {
+                swal({title: message, type: "success", timer: 3000 });
+            }, error: function(response) {
                 console.log("Timeseries manifest delete error " + response);
             }
          });
