@@ -31,7 +31,6 @@ var previewController = {
 
     getPreviewUri: function () {
         var iframeUri = document.getElementById('iframe').contentWindow.location.pathname;
-        //if (iframeUri == 'blank') {console.log('WAS BLANK'); parsedUri = workspaceState.activeUrl.get()}
         return utilities.checkPathSlashes(iframeUri);
     },
 
