@@ -1,7 +1,5 @@
 var previewView = require('workspace/preview/previewView'),
-    store = require('shared/state/state.js'),
     baseUrlState = require('shared/state/baseUrlState'),
-    browseController = require('workspace/browse/browseController'),
     workspaceState = require('shared/state/workspaceState'),
     utilities = require('shared/utilities/utilities');
 
@@ -9,30 +7,18 @@ var previewController = {
 
     init: function () {
         previewView.render(baseUrlState.get());
-        this.bindPreviewClick();
+        this.catchPreviewOnUnload();
     },
 
-    bindPreviewClick: function() {
-        // catch babbage onunload message
-        window.addEventListener("message", function (e) {
-            previewController.handlePreviewClick();
+    catchPreviewOnUnload: function() {
+        window.addEventListener("message", function () {
+            previewController.handlePreviewChange();
         });
     },
 
-    handlePreviewClick: function() {
-
-        if (!workspaceState.isDirty.get()) {
-
-            var newUri = previewController.getPreviewUri();
-
-            // update address bar
-            this.addressBar.set(newUri);
-            // update active url
-            workspaceState.activeUrl.set(newUri);
-
-
-        }
-
+    handlePreviewChange: function() {
+        var newPreviewUri = this.getPreviewUri();
+        workspaceState.activeUrl.set(newPreviewUri);
     },
 
     refreshPreview: function() {
@@ -44,10 +30,9 @@ var previewController = {
     },
 
     getPreviewUri: function () {
-
-        var parsedUri = document.getElementById('iframe').contentWindow.location.pathname;
-        if (parsedUri == 'blank') {console.log('WAS BLANK'); parsedUri = workspaceState.activeUrl.get()}
-        return utilities.checkPathSlashes(parsedUri);
+        var iframeUri = document.getElementById('iframe').contentWindow.location.pathname;
+        //if (iframeUri == 'blank') {console.log('WAS BLANK'); parsedUri = workspaceState.activeUrl.get()}
+        return utilities.checkPathSlashes(iframeUri);
     },
 
     addressBar: {
@@ -57,7 +42,6 @@ var previewController = {
             addressBar.value = baseUrlState.get() + uri;
         }
     }
-
 
 };
 
