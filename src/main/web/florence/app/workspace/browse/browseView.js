@@ -1,11 +1,19 @@
 
-var browseTemplate = require('./browse.handlebars'),
+var treeTemplate = require('./browse.handlebars'),
+    loaderTemplate = require('../../shared/templatePartials/loadingAnimation.handlebars');
     getBrowseTree = require('shared/api/getBrowseTree');
 
 var browseView = {
 
-    render: function (browseTreeData) {
-        document.getElementById('workspace-browse').innerHTML = browseTemplate(browseTreeData);
+    render: {
+
+        loader: function() {
+            document.getElementById('workspace-browse').innerHTML = '<div class="margin-top--3">' + loaderTemplate({large: true, dark: true}) + '</div>';
+        },
+
+        tree: function(browseTreeData) {
+            document.getElementById('workspace-browse').innerHTML = treeTemplate(browseTreeData);
+        }
     },
 
     selectDirectories: function($this) {

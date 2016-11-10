@@ -7,10 +7,12 @@ var browseView = require('workspace/browse/browseView'),
 var browseController = {
 
     init: function () {
+        browseView.render.loader();
+
         getBrowseTree().then(function(browseTreeData){
             workspaceState.browseTreeData.set(browseTreeData);
             browseController.addDeleteMarkersToData(browseTreeData);
-            browseView.render(browseTreeData);
+            browseView.render.tree(browseTreeData);
             browseController.bindPageButtonsClick();
             browseController.bindNodeClick();
 
