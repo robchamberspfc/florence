@@ -4,13 +4,21 @@ var createView = require('workspace/create/createView'),
     bindDatePicker = require('shared/utilities/bindDatePicker'),
     pageModels = require('shared/models/pageModels'),
     postEditorData = require('shared/api/postEditorData'),
-    editController = require('workspace/edit/editController');
+    editController = require('workspace/edit/editController'),
+    getPage = require('shared/api/getPage'),
+    activeURLPageType = "";
 
 var createController = {
 
     init: function() {
-        createView.render(createController.validPageOptions(workspaceState.activeUrl.get()));
+        activeURLPageType = this.findNodeInBrowseTreeByUri(workspaceState.activeUrl.get()).type;
+        createView.render(createController.getValidPageOptions());
         this.bindEvents();
+
+        // If page being created as part of a series pre-populate some inputs
+        if (activeURLPageType === "bulletin" || activeURLPageType === "article") {
+            this.prePopulateInputs();
+        }
     },
 
     bindEvents: function() {
@@ -57,6 +65,37 @@ var createController = {
         });
     },
 
+
+
+    bindPageTypeSelection: function() {
+        $("#pageType").change(function() {
+            var selectOption = $(this).val();
+            createController.buildInputs(selectOption);
+            workspaceState.editorData.set(createController.getPageModel(selectOption));
+        });
+    },
+
+    prePopulateInputs: function() {
+        var $pageNameInput;
+
+        // Render inputs
+        createController.buildInputs(activeURLPageType);
+        workspaceState.editorData.set(createController.getPageModel(activeURLPageType));
+        $pageNameInput = $('#pagename');
+
+        // Disable page name input as it'll be inheriting from page data
+        $pageNameInput.prop('disabled', true).prop('placeholder', 'Page name [FETCHING TITLE...]');
+
+        // Get title from page data of active URL
+        getPage().then(function(pageData) {
+            $pageNameInput.val(pageData.description.title).trigger('input');
+            $pageNameInput.prop('disabled', false).prop('placeholder', 'Page name');
+        }).catch(function(error) {
+            console.log("Error getting page data for creating page as part of a series:\n", error);
+            $pageNameInput.prop('disabled', false).prop('placeholder', 'Page name');
+        });
+    },
+
     validateForm: function() {
         var pageData = workspaceState.editorData.get();
 
@@ -76,21 +115,6 @@ var createController = {
         }
 
         return true;
-    },
-
-    savePage: function(formData) {
-        var i;
-        console.log(formData);
-
-        var dataJSON = {
-
-        };
-
-        // postContent(dataJSON).then(function(response) {
-        //     console.log(response);
-        // }).catch(function(error) {
-        //     console.log("Error posting new page to zebedee: ", error);
-        // });
     },
 
     buildInputs: function(selectedOptionId) {
@@ -147,18 +171,13 @@ var createController = {
         }
     },
 
-     bindPageTypeSelection: function() {
-        $("#pageType").change(function() {
-            var selectOption = $(this).val();
-            createController.buildInputs(selectOption);
-            workspaceState.editorData.set(createController.getPageModel(selectOption));
-        });
-    },
-
     getPageModel: function(selectedOptionId) {
         switch (selectedOptionId) {
             case ("bulletin"): {
                 return pageModels.bulletin;
+            }
+            case ("article"): {
+                return pageModels.article;
             }
             default: {
                 return {};
@@ -172,7 +191,6 @@ var createController = {
             nodeObject = false;
 
         if (uri === "/") {
-            console.log('root');
             return browseTreeData;
         }
 
@@ -193,12 +211,11 @@ var createController = {
         return nodeObject;
     },
 
-    getValidPageTypesForLocation: function(uri) {
+    getValidPageTypesForLocation: function() {
         /* Returns an array of page types that can be created at a URI */
-        var pageType = createController.findNodeInBrowseTreeByUri(uri).type,
-            validPageTypes = [];
+        var validPageTypes = [];
 
-        switch (pageType) {
+        switch (activeURLPageType) {
             case ("home_page"): {
                 validPageTypes = [
                     "visualisation",
@@ -224,6 +241,12 @@ var createController = {
             case ("bulletin"): {
                 validPageTypes = [
                     "bulletin"
+                ];
+                break;
+            }
+            case ("article"): {
+                validPageTypes = [
+                    "article"
                 ];
                 break;
             }
@@ -325,8 +348,8 @@ var createController = {
         ];
     },
 
-    validPageOptions: function(uri) {
-        var validPageTypes = createController.getValidPageTypesForLocation(uri),
+    getValidPageOptions: function() {
+        var validPageTypes = createController.getValidPageTypesForLocation(),
             validPageTypesLength = validPageTypes.length,
             validPageOptions = createController.allPageTypeOptions(),
             validPageOptionsLength = validPageOptions.length,
@@ -337,6 +360,10 @@ var createController = {
             for (nestedIndex = 0; nestedIndex < validPageTypesLength; nestedIndex++) {
                 if (validPageOptions[index].id == validPageTypes[nestedIndex]) {
                     validPageOptions[index].valid = true;
+                }
+
+                if (validPageOptions[index].id === activeURLPageType) {
+                    validPageOptions[index].active = true;
                 }
             }
         }

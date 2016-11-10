@@ -9,7 +9,7 @@
                     {{!-- display valid options --}}
                     {{#each this}}
                         {{#if valid}}
-                            <option value="{{id}}" name="{{id}}">{{title}}</option>
+                            <option {{#if active}}selected{{/if}} value="{{id}}" name="{{id}}">{{title}}</option>
                         {{/if}}
                     {{/each}}
 

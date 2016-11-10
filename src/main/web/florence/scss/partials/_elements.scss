@@ -82,6 +82,10 @@ input {
     margin: $lineheight 0;
     padding: 7px $gutter;
     background: $white;
+
+    &:disabled {
+        opacity: 0.65;
+    }
 }
 
 // Focus styling

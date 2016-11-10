@@ -81,10 +81,10 @@ function florence(state, action) {
         }
     }
 
-    // console.log('ACTION: ', action);
-    // console.log('OLD STATE: ', state);
-    // console.log('NEW STATE: ', newState);
-    // console.log('--------');
+    console.log('ACTION: ', action);
+    console.log('OLD STATE: ', state);
+    console.log('NEW STATE: ', newState);
+    console.log('--------');
 
     return newState
 }
