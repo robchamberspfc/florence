@@ -8,6 +8,9 @@ var workspaceView = require('workspace/workspaceView'),
     workspaceState = require('shared/state/workspaceState'),
     previewController = require('workspace/preview/previewController');
 
+var get = require('shared/utilities/get'),
+    post = require('shared/utilities/post');
+
 var workspaceController = {
 
     init: function() {

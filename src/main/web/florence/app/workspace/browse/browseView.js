@@ -1,7 +1,6 @@
 
 var treeTemplate = require('./browse.handlebars'),
     loaderTemplate = require('../../shared/templatePartials/loadingAnimation.handlebars');
-    getBrowseTree = require('shared/api/getBrowseTree');
 
 var browseView = {
 
