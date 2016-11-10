@@ -13,12 +13,10 @@ var browseController = {
             browseView.render(browseTreeData);
             browseController.bindPageButtonsClick();
             browseController.bindNodeClick();
-            // browseController.toggleBrowseNodeByStateChange();
 
             if (workspaceState.activeUrl.get().length > 0) {
                 browseController.selectBrowseNodeByUrl(workspaceState.activeUrl.get());
             }
-            // browseController.toggleBrowseNodeByStateChange();
         }).catch(function(error) {
             console.log(error);
         });

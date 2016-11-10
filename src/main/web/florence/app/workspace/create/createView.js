@@ -7,7 +7,7 @@ var createView = {
         document.getElementById('workspace-browse').innerHTML = createTemplate(templateData);
     },
 
-    optionalInputs: {
+    inputs: {
 
         append: function(inputHtml) {
             document.getElementById('js-create__optional-inputs').innerHTML += inputHtml;
@@ -65,6 +65,11 @@ var createView = {
     inputHtml: function(inputType) {
 
         switch (inputType) {
+            case ("pageName"): {
+                return '<div><label for="pagename" class="hidden">Page name</label>' +
+                    '<input id="pagename" name="pagename" required minlength="4" class="full" type="text" placeholder="Page name"/>' +
+                    '<span class="js-create__input-error"></span></div>';
+            }
             case ("edition"): {
                 return '<div><label for="edition">Edition</label>' +
                     '<input id="edition" name="edition" type="text" placeholder="August 2010, Q3 2015, 1978, etc." />' +

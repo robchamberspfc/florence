@@ -29,12 +29,6 @@ var createStore = Redux.createStore,
     },
     store = createStore(florence);
 
-/* Watch store changes example */
-// var watchStore = watch(store.getState, 'workspace.activeScreen');
-// store.subscribe(watchStore(function(newVal, oldVal, objectPath) {
-//     console.log('%s changed from %s to %s', objectPath, oldVal, newVal)
-// }));
-
 function florence(state, action) {
     // Set initial state
     if (state === undefined) {
@@ -75,12 +69,15 @@ function florence(state, action) {
             break;
         }
         case ("UPDATE_IS_DIRTY"): {
-            newState.editor.isDirty = action.isDirty;
+            newState.workspace.isDirty = action.isDirty;
+            break;
+        }
+        case ("UPDATE_EDITOR_DATA"): {
+            newState.workspace.editorData = action.editorData;
             break;
         }
         default: {
-            console.log("State action type not recognised");
-            break;
+            console.log("State action '%s' not recognised", action.type);
         }
     }
 

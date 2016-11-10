@@ -1,73 +1,111 @@
 
 var createView = require('workspace/create/createView'),
     workspaceState = require('shared/state/workspaceState'),
-    bindDatePicker = require('shared/utilities/bindDatePicker');
+    bindDatePicker = require('shared/utilities/bindDatePicker'),
+    pageModels = require('shared/models/pageModels'),
+    postEditorData = require('shared/api/postEditorData'),
+    editController = require('workspace/edit/editController');
 
 var createController = {
 
     init: function() {
         createView.render(createController.validPageOptions(workspaceState.activeUrl.get()));
-        this.bindPageTypeSelection();
+        this.bindEvents();
     },
 
-    bindFormSubmit: function() {
-        var $form = $('#js-create__form'),
-            formData;
+    bindEvents: function() {
+        var $form = $('#js-create__form');
 
-        $form.off().submit(function(event) {
+        this.bindPageTypeSelection();
+        this.bindFormInput($form);
+        this.bindFormSubmit($form);
+    },
+
+    bindFormSubmit: function($form) {
+        $form.submit(function(event) {
             event.preventDefault();
-            formData = new FormData(this);
 
-            if (createController.validateForm(formData)) {
-                console.log("Submit form data to API");
+            if (createController.validateForm()) {
+                postEditorData().then(function() {
+                    workspaceState.activeScreen.set('edit');
+                }).catch(function(error) {
+                    console.log(error);
+                });
             }
-
         });
     },
 
-    validateForm: function(formData) {
+    bindFormInput: function($form) {
+        var newEditorData;
 
-        // Clear any existing errors from form so we start with a blank slate
+        $form.on('input', '#edition', function() {
+            newEditorData = workspaceState.editorData.get();
+            newEditorData.description.edition = $(this).val();
+            workspaceState.editorData.set(newEditorData)
+        });
+
+        $form.on('input', '#pagename', function() {
+            newEditorData = workspaceState.editorData.get();
+            newEditorData.description.title = $(this).val();
+            workspaceState.editorData.set(newEditorData);
+        });
+
+        $form.on('change', '#releaseDate', function() {
+            newEditorData = workspaceState.editorData.get();
+            newEditorData.description.releaseDate = (new Date ($(this).val())).toISOString();
+            workspaceState.editorData.set(newEditorData);
+        });
+    },
+
+    validateForm: function() {
+        var pageData = workspaceState.editorData.get();
+
         createView.renderInputError.clearAll();
 
 
         /* Validate each key that could exist in form data */
 
-        if (formData.has("pageType")) {
-            if (formData.get("pageType") === "noneSelected") {
-                createView.renderInputError.pageType("Please select a page type");
-                return false;
-            }
+        // Edition
+        var edition;
+        if (pageData.description.edition) {
+            edition = (pageData.description.edition).toLowerCase();
         }
-
-        if (formData.has("edition")) {
-            var editionValue = formData.get("edition");
-            if (editionValue.toLowerCase() === "latest" || editionValue.toLowerCase() === "data" || editionValue.toLowerCase() === "previousreleases" || editionValue.toLowerCase() === "current") {
-                createView.renderInputError.edition("'" + editionValue + "'" + " is a reserved path so it can't be used as an edition title");
-                return false;
-            }
-            if (!editionValue) {
-                createView.renderInputError.edition("'Edition' field can't be left empty");
-                return false;
-            }
+        if (edition && (edition === 'latest' || edition === 'data' || edition === 'previousreleases' || edition === 'current')) {
+            createView.renderInputError.edition("<span>'" + edition + "' is a reserved path so it can't be used as an edition title</span>");
+            return false;
         }
 
         return true;
     },
 
+    savePage: function(formData) {
+        var i;
+        console.log(formData);
+
+        var dataJSON = {
+
+        };
+
+        // postContent(dataJSON).then(function(response) {
+        //     console.log(response);
+        // }).catch(function(error) {
+        //     console.log("Error posting new page to zebedee: ", error);
+        // });
+    },
+
     buildInputs: function(selectedOptionId) {
         /* Get string of inputs HTML and request view to render it */
-        var inputsArray = this.inputsForPageType[this.mapOptionIdToPageTypeId(selectedOptionId)],
+        var inputsArray = this.getInputsForOptionID(selectedOptionId),
             inputsArrayLength = inputsArray.length,
             i;
 
         // Empty any existing optional inputs from DOM
-        createView.optionalInputs.empty();
+        createView.inputs.empty();
 
         // Go through array and build up new array of HTML returned for input type from view
         for (i = 0; i < inputsArrayLength; i++) {
             var inputHtml = (createView.inputHtml(inputsArray[i]));
-            createView.optionalInputs.append(inputHtml);
+            createView.inputs.append(inputHtml);
 
             // Bind date picker pop-up on focus of input - pull this out to a separate function if it starts being used for more inputs
             if (inputsArray[i] === "releaseDate") {
@@ -77,20 +115,30 @@ var createController = {
 
     },
 
-    mapOptionIdToPageTypeId: function(selectedOptionId) {
+    getInputsForOptionID: function(selectedOptionId) {
         // Get page type for the selected option
         switch (selectedOptionId) {
             case ("noneSelected"): {
-                return "noneSelected";
+                return [];
             }
             case ("bulletin"): {
-                return "bulletin";
+                return [
+                    "pageName",
+                    "edition",
+                    "releaseDate"
+                ];
             }
             case ("dataset_landing_page"): {
-                return "datasetLandingPage";
+                return [
+                    "pageName",
+                    "releaseDate"
+                ];
             }
             case ("timeseries_dataset_landing_page"): {
-                return "datasetLandingPage";
+                return [
+                    "pageName",
+                    "releaseDate"
+                ];
             }
             default: {
                 console.log("Unrecognised selected option id, doesn't map to a page type");
@@ -99,28 +147,23 @@ var createController = {
         }
     },
 
-    inputsForPageType: {
-        /* Return create screen input types for different page types */
-
-        noneSelected: [],
-
-        bulletin: [
-            "edition",
-            "releaseDate"
-        ],
-
-        datasetLandingPage: [
-            "releaseDate"
-        ]
-
-    },
-
-    bindPageTypeSelection: function() {
+     bindPageTypeSelection: function() {
         $("#pageType").change(function() {
             var selectOption = $(this).val();
             createController.buildInputs(selectOption);
-            createController.bindFormSubmit(selectOption);
+            workspaceState.editorData.set(createController.getPageModel(selectOption));
         });
+    },
+
+    getPageModel: function(selectedOptionId) {
+        switch (selectedOptionId) {
+            case ("bulletin"): {
+                return pageModels.bulletin;
+            }
+            default: {
+                return {};
+            }
+        }
     },
 
     findNodeInBrowseTreeByUri: function(uri) {

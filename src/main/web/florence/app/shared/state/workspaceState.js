@@ -60,6 +60,7 @@ var workspaceState = {
     },
 
     isDirty: {
+
         get: function() {
             return store.getState().workspace.isDirty;
         },
@@ -70,6 +71,21 @@ var workspaceState = {
                 isDirty: bool
             })
         }
+    },
+
+    editorData: {
+
+        get: function() {
+            return store.getState().workspace.editorData;
+        },
+
+        set: function(editorData) {
+            store.dispatch({
+                type: "UPDATE_EDITOR_DATA",
+                editorData: editorData
+            })
+        }
+
     }
 
 };
