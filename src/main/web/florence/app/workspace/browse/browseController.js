@@ -99,7 +99,7 @@ var browseController = {
     },
 
     selectBrowseNodeByUrl: function(url) {
-        console.log('Node selected');
+        // console.log('Node selected');
         var $this = $('[data-url="' + url + '"]');
 
         // Hide secondary buttons for currently selected item (will gracefully fail if there's no selected item with displayed secondary buttons)

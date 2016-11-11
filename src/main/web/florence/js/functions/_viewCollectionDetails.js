@@ -225,6 +225,8 @@ function viewCollectionDetails(collectionId, $this) {
         });
 
         $workOnBtn.click(function () {
+            var workspaceState = require('shared/state/workspaceState');
+            workspaceState.reset();
             var collectionState = require('shared/state/collectionState.js');
             collectionState.set(collection);
             var workspaceController = require('workspace/workspaceController');

@@ -8,9 +8,6 @@ var workspaceView = require('workspace/workspaceView'),
     workspaceState = require('shared/state/workspaceState'),
     previewController = require('workspace/preview/previewController');
 
-var get = require('shared/utilities/get'),
-    post = require('shared/utilities/post');
-
 var workspaceController = {
 
     init: function() {
@@ -24,22 +21,38 @@ var workspaceController = {
     updateWorkspace: {
 
         onActiveScreenStateUpdate: function() {
-            workspaceState.activeScreen.watch(function(newActiveScreen) {
-                workspaceController.renderActiveScreen(newActiveScreen)
+            // var unsubscribe = workspaceState.activeScreen.watch(function(newActiveScreen) {
+            //     workspaceController.renderActiveScreen(newActiveScreen);
+            //     console.log('New active screen: ', newActiveScreen);
+            // });
+            //
+            // $('.js-nav-item').click(function() {
+            //     console.log('Unsubscribe');
+            //     unsubscribe();
+            // });
+            function onChange() {
+                console.log("Parent onchange function fired");
+            }
+
+            var unsubscribe = workspaceState.activeScreen.watch(onChange);
+
+            $('.js-nav-item').click(function() {
+                console.log('Unsubscribe');
+                unsubscribe();
             });
         },
 
         onActiveUrlStateUpdate: function() {
-            workspaceState.activeUrl.watch(function(newValue) {
-                // Switch to browse screen if active url changes on creator or editor
-                if (workspaceState.activeScreen.get() === "create" || workspaceState.activeScreen.get() === "edit") {
-                    workspaceState.activeScreen.set('browse');
-                    return;
-                }
-                // Browse already showing, just update to new node
-                browseController.selectBrowseNodeByUrl(newValue);
-                previewController.updatePreview(newValue);
-            })
+            // workspaceState.activeUrl.watch(function(newValue) {
+            //     // Switch to browse screen if active url changes on creator or editor
+            //     if (workspaceState.activeScreen.get() === "create" || workspaceState.activeScreen.get() === "edit") {
+            //         workspaceState.activeScreen.set('browse');
+            //         return;
+            //     }
+            //     // Browse already showing, just update to new node
+            //     browseController.selectBrowseNodeByUrl(newValue);
+            //     previewController.updatePreview(newValue);
+            // })
         }
 
     },

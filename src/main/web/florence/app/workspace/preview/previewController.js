@@ -31,7 +31,7 @@ var previewController = {
 
     getPreviewUri: function () {
         var iframeUri = document.getElementById('iframe').contentWindow.location.pathname;
-        return utilities.checkPathSlashes(iframeUri);
+        return utilities.getSafeURI(iframeUri);
     },
 
     addressBar: {

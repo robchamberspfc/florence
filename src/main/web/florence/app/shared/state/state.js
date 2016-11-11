@@ -48,6 +48,10 @@ function florence(state, action) {
             newState.workspace.browseTreeData = action.browseTreeData;
             break;
         }
+        case ("RESET_WORKSPACE"): {
+            newState.workspace = initialState.workspace;
+            break;
+        }
         case ("UPDATE_ACTIVE_WORKSPACE_SCREEN"): {
             newState.workspace.activeScreen = action.activeScreen;
             break;
@@ -81,10 +85,10 @@ function florence(state, action) {
         }
     }
 
-    console.log('ACTION: ', action);
-    console.log('OLD STATE: ', state);
-    console.log('NEW STATE: ', newState);
-    console.log('--------');
+    // console.log('ACTION: ', action);
+    // console.log('OLD STATE: ', state);
+    // console.log('NEW STATE: ', newState);
+    // console.log('--------');
 
     return newState
 }

@@ -3,9 +3,9 @@ var createView = require('workspace/create/createView'),
     workspaceState = require('shared/state/workspaceState'),
     bindDatePicker = require('shared/utilities/bindDatePicker'),
     pageModels = require('shared/models/pageModels'),
-    postEditorData = require('shared/api/postEditorData'),
     editController = require('workspace/edit/editController'),
     getPage = require('shared/api/getPage'),
+    saveNewPage = require('shared/api/saveNewPage'),
     activeURLPageType = "";
 
 var createController = {
@@ -33,32 +33,34 @@ var createController = {
         $form.submit(function(event) {
             event.preventDefault();
 
-            if (createController.validateForm()) {
-                postEditorData().then(function() {
-                    workspaceState.activeScreen.set('edit');
-                }).catch(function(error) {
-                    console.log(error);
-                });
+            if (!createController.validateForm()) {
+                return false;
             }
+
+            saveNewPage().then(function(newPageURI) {
+                workspaceState.activeUrl.set(newPageURI);
+            }).catch(function(error) {
+                console.log("Error saving new page \n", error);
+            });
         });
     },
 
     bindFormInput: function($form) {
         var newEditorData;
 
-        $form.on('input', '#edition', function() {
+        $form.off().on('input', '#edition', function() {
             newEditorData = workspaceState.editorData.get();
             newEditorData.description.edition = $(this).val();
             workspaceState.editorData.set(newEditorData)
         });
 
-        $form.on('input', '#pagename', function() {
+        $form.off().on('input', '#pagename', function() {
             newEditorData = workspaceState.editorData.get();
             newEditorData.description.title = $(this).val();
             workspaceState.editorData.set(newEditorData);
         });
 
-        $form.on('change', '#releaseDate', function() {
+        $form.off().on('change', '#releaseDate', function() {
             newEditorData = workspaceState.editorData.get();
             newEditorData.description.releaseDate = (new Date ($(this).val())).toISOString();
             workspaceState.editorData.set(newEditorData);
@@ -100,7 +102,6 @@ var createController = {
         var pageData = workspaceState.editorData.get();
 
         createView.renderInputError.clearAll();
-
 
         /* Validate each key that could exist in form data */
 
@@ -358,6 +359,7 @@ var createController = {
 
         for (index = 0; index < validPageOptionsLength; index++) {
             for (nestedIndex = 0; nestedIndex < validPageTypesLength; nestedIndex++) {
+
                 if (validPageOptions[index].id == validPageTypes[nestedIndex]) {
                     validPageOptions[index].valid = true;
                 }
@@ -365,6 +367,7 @@ var createController = {
                 if (validPageOptions[index].id === activeURLPageType) {
                     validPageOptions[index].active = true;
                 }
+
             }
         }
 
