@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "handlebars-loader": "^1.4.0",
+    "object-path": "^0.11.2",
     "path": "^0.12.7",
-    "redux": "^3.6.0",
-    "redux-watch": "^1.1.1"
+    "redux": "^3.6.0"
   }
 }

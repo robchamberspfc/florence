@@ -1,7 +1,6 @@
 
 var store = require('shared/state/state.js'),
-    watch = require('redux-watch'),
-    watchStore = require('shared/state/watchState');
+    watchState = require('shared/state/watchState');
 
 var workspaceState = {
 
@@ -40,43 +39,7 @@ var workspaceState = {
         },
 
         watch: function(onChange) {
-            // var watchStore = watch(store.getState, 'workspace.activeScreen');
-            //
-            // function handleChange() {
-            //     watchStore(function(newVal, oldVal, objectPath) {
-            //         console.log('%s changed from "%s" to "%s"', objectPath, oldVal, newVal);
-            //         workspaceController.renderActiveScreen(newVal);
-            //     });
-            // }
-            //
-            // var unsubscribe = store.subscribe(handleChange);
-
-            function select(state) {
-                return state.workspace.activeScreen;
-            }
-
-            var currentValue;
-            function handleChange() {
-                var previousValue = currentValue;
-                currentValue = select(store.getState());
-
-                if (previousValue !== currentValue) {
-                    onChange();
-                    console.log('Some deep nested property changed from', previousValue, 'to', currentValue)
-                }
-            }
-
-            var unsubscribe = store.subscribe(handleChange);
-            return unsubscribe;
-
-            // $('.js-nav-item').click(function() {
-            //     console.log('Unsubscribe');
-            //     unsubscribe();
-            // });
-
-            // watchStore('workspace.activeScreen', function(newValue) {
-            //     onChange(newValue)
-            // });
+            return watchState('workspace.activeScreen', onChange);
         }
     },
 
@@ -94,9 +57,7 @@ var workspaceState = {
         },
 
         watch: function(onChange) {
-            watchStore('workspace.activeUrl', function(newValue) {
-                onChange(newValue);
-            });
+            return watchState('workspace.activeUrl', onChange);
         }
     },
 

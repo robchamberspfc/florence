@@ -1,5 +1,4 @@
 
-/* Imports */
 var workspaceView = require('workspace/workspaceView'),
     navigationController = require('workspace/navigation/navigationController'),
     browseController = require('workspace/browse/browseController'),
@@ -13,46 +12,63 @@ var workspaceController = {
     init: function() {
         workspaceView.render();
         navigationController.init();
-        workspaceController.updateWorkspace.onActiveScreenStateUpdate();
-        workspaceController.updateWorkspace.onActiveUrlStateUpdate();
+        this.updateWorkspace.onActiveScreenStateUpdate();
+        this.updateWorkspace.onActiveUrlStateUpdate();
+        this.bindWorkspaceExit();
         workspaceState.activeScreen.set('browse');
+    },
+
+    // Store array of all state observations for the workspace so that they can be cancelled when leaving the workspace (or else it's end up being observed multiple times)
+    stateSubscriptions: [],
+
+    cancelStateSubscriptions: function() {
+        var i,
+            unsubscriptions = this.stateSubscriptions,
+            unsubscriptionsLength = unsubscriptions.length;
+
+        for (i = 0; i < unsubscriptionsLength; i++) {
+            unsubscriptions[i]();
+        }
+    },
+
+    bindWorkspaceExit: function() {
+        $('.js-nav-item').off().click(function() {
+            workspaceController.cancelStateSubscriptions();
+        });
     },
 
     updateWorkspace: {
 
         onActiveScreenStateUpdate: function() {
-            // var unsubscribe = workspaceState.activeScreen.watch(function(newActiveScreen) {
-            //     workspaceController.renderActiveScreen(newActiveScreen);
-            //     console.log('New active screen: ', newActiveScreen);
-            // });
-            //
-            // $('.js-nav-item').click(function() {
-            //     console.log('Unsubscribe');
-            //     unsubscribe();
-            // });
-            function onChange() {
-                console.log("Parent onchange function fired");
+            function renderNewScreen(newScreen) {
+                workspaceController.renderActiveScreen(newScreen);
             }
 
-            var unsubscribe = workspaceState.activeScreen.watch(onChange);
+            var unsubscribe = workspaceState.activeScreen.watch(renderNewScreen);
 
-            $('.js-nav-item').click(function() {
-                console.log('Unsubscribe');
-                unsubscribe();
-            });
+            workspaceController.stateSubscriptions.push(unsubscribe);
         },
 
         onActiveUrlStateUpdate: function() {
-            // workspaceState.activeUrl.watch(function(newValue) {
-            //     // Switch to browse screen if active url changes on creator or editor
-            //     if (workspaceState.activeScreen.get() === "create" || workspaceState.activeScreen.get() === "edit") {
-            //         workspaceState.activeScreen.set('browse');
-            //         return;
-            //     }
-            //     // Browse already showing, just update to new node
-            //     browseController.selectBrowseNodeByUrl(newValue);
-            //     previewController.updatePreview(newValue);
-            // })
+
+            function updateWorkspace(newUrl) {
+                // Switch to browse screen if active url changes on creator or editor
+                if (workspaceState.activeScreen.get() === "create" || workspaceState.activeScreen.get() === "edit") {
+                    workspaceState.activeScreen.set('browse');
+                    return;
+                }
+
+                // If browse already showing, update to new node
+                if (workspaceState.activeScreen.get() === "browse") {
+                    browseController.selectBrowseNodeByUrl(newUrl);
+                    previewController.updatePreview(newUrl);
+                }
+            }
+
+            var unsubscribe = workspaceState.activeUrl.watch(updateWorkspace);
+
+            workspaceController.stateSubscriptions.push(unsubscribe);
+
         }
 
     },
