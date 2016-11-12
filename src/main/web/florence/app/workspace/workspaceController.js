@@ -18,7 +18,7 @@ var workspaceController = {
         workspaceState.activeScreen.set('browse');
     },
 
-    // Store array of all state observations for the workspace so that they can be cancelled when leaving the workspace (or else it's end up being observed multiple times)
+    // Array of all state observations for the workspace so that they can be cancelled when leaving the workspace (or else it's end up being observed multiple times)
     stateSubscriptions: [],
 
     cancelStateSubscriptions: function() {

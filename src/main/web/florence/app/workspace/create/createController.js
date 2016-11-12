@@ -18,6 +18,7 @@ var createController = {
         // If page being created as part of a series pre-populate some inputs
         if (activeURLPageType === "bulletin" || activeURLPageType === "article") {
             this.prePopulateInputs();
+            this.prePopulatePageModel();
         }
     },
 
@@ -95,6 +96,31 @@ var createController = {
         }).catch(function(error) {
             console.log("Error getting page data for creating page as part of a series:\n", error);
             $pageNameInput.prop('disabled', false).prop('placeholder', 'Page name');
+        });
+    },
+
+    prePopulatePageModel: function() {
+        // Get data from active bulletin ready for editor screen later
+        getPage().then(function(pageData) {
+            var newEditorData = workspaceState.editorData.get();
+
+            newEditorData.description.nationalStatistic = pageData.description.nationalStatistic;
+            newEditorData.description.contact.name = pageData.description.contact.name;
+            newEditorData.description.contact.email = pageData.description.contact.email;
+            newEditorData.description.contact.telephone = pageData.description.contact.telephone;
+            newEditorData.description.keywords = pageData.description.keywords;
+            newEditorData.description.metaDescription = pageData.description.metaDescription;
+            newEditorData.relatedMethodology = pageData.relatedMethodology;
+
+            if (newEditorData.type === "bulletin") {
+                newEditorData.description.summary = pageData.description.summary;
+                newEditorData.relatedData = pageData.relatedData;
+            }
+
+            // Update state with new editorData inherited from publication series
+            workspaceState.editorData.set(newEditorData);
+        }).catch(function(error) {
+            console.log("Error getting page to inherit series data into page model: \n", error);
         });
     },
 
