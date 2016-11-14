@@ -49,19 +49,23 @@ var createController = {
     bindFormInput: function($form) {
         var newEditorData;
 
-        $form.off().on('input', '#edition', function() {
+        // Remove previous bindings
+        $form.off();
+
+        // Bind updating to any inputs
+        $form.on('input', '#edition', function() {
             newEditorData = workspaceState.editorData.get();
             newEditorData.description.edition = $(this).val();
             workspaceState.editorData.set(newEditorData)
         });
 
-        $form.off().on('input', '#pagename', function() {
+        $form.on('input', '#pagename', function() {
             newEditorData = workspaceState.editorData.get();
             newEditorData.description.title = $(this).val();
             workspaceState.editorData.set(newEditorData);
         });
 
-        $form.off().on('change', '#releaseDate', function() {
+        $form.on('change', '#releaseDate', function() {
             newEditorData = workspaceState.editorData.get();
             newEditorData.description.releaseDate = (new Date ($(this).val())).toISOString();
             workspaceState.editorData.set(newEditorData);
@@ -80,8 +84,6 @@ var createController = {
 
     prePopulateInputs: function() {
         var $pageNameInput;
-
-        debugger;
 
         // Render inputs
         createController.buildInputs(activeURLPageType);
@@ -154,8 +156,6 @@ var createController = {
 
         // Empty any existing optional inputs from DOM
         createView.inputs.empty();
-
-        debugger;
 
         // Go through array and build up new array of HTML returned for input type from view
         for (i = 0; i < inputsArrayLength; i++) {
