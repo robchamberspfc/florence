@@ -4,19 +4,20 @@ var createView = require('workspace/create/createView'),
     bindDatePicker = require('shared/utilities/bindDatePicker'),
     pageModels = require('shared/models/pageModels'),
     editController = require('workspace/edit/editController'),
-    getPage = require('shared/api/getPage'),
+    getActivePage = require('shared/api/getActivePage'),
     saveNewPage = require('shared/api/saveNewPage'),
-    activeURLPageType = "";
+    utilities = require('shared/utilities/utilities'),
+    activePageType = "";
 
 var createController = {
 
     init: function() {
-        activeURLPageType = this.findNodeInBrowseTreeByUri(workspaceState.activeUrl.get()).type;
+        activePageType = utilities.findNodeInBrowseTreeByUri(workspaceState.activeUrl.get()).type;
         createView.render(createController.getValidPageOptions());
         this.bindEvents();
 
         // If page being created as part of a series pre-populate some inputs
-        if (activeURLPageType === "bulletin" || activeURLPageType === "article") {
+        if (activePageType === "bulletin" || activePageType === "article") {
             this.prePopulateInputs();
             this.prePopulatePageModel();
         }
@@ -86,15 +87,15 @@ var createController = {
         var $pageNameInput;
 
         // Render inputs
-        createController.buildInputs(activeURLPageType);
-        workspaceState.editorData.set(createController.getPageModel(activeURLPageType));
+        createController.buildInputs(activePageType);
+        workspaceState.editorData.set(createController.getPageModel(activePageType));
         $pageNameInput = $('#pagename');
 
         // Disable page name input as it'll be inheriting from page data
         $pageNameInput.prop('disabled', true).prop('placeholder', 'Page name [FETCHING TITLE...]');
 
         // Get title from page data of active URL
-        getPage().then(function(pageData) {
+        getActivePage().then(function(pageData) {
             $pageNameInput.val(pageData.description.title).trigger('input');
             $pageNameInput.prop('disabled', false).prop('placeholder', 'Page name');
         }).catch(function(error) {
@@ -105,7 +106,7 @@ var createController = {
 
     prePopulatePageModel: function() {
         // Get data from active bulletin ready for editor screen later
-        getPage().then(function(pageData) {
+        getActivePage().then(function(pageData) {
             var newEditorData = workspaceState.editorData.get();
 
             newEditorData.description.nationalStatistic = pageData.description.nationalStatistic;
@@ -223,37 +224,11 @@ var createController = {
         }
     },
 
-    findNodeInBrowseTreeByUri: function(uri) {
-        // TODO this feels like a utility - it perhaps shouldn't live here at least?
-        var browseTreeData = workspaceState.browseTreeData.get(),
-            nodeObject = false;
-
-        if (uri === "/") {
-            return browseTreeData;
-        }
-
-        checkOneLayer(browseTreeData.children);
-
-        function checkOneLayer(array) {
-            array.forEach(function(object) {
-                if (object.uri === uri) {
-                    nodeObject = object;
-                }
-
-                if (!nodeObject && object.children.length > 0) {
-                    checkOneLayer(object.children);
-                }
-            });
-        }
-
-        return nodeObject;
-    },
-
     getValidPageTypesForLocation: function() {
         /* Returns an array of page types that can be created at a URI */
         var validPageTypes = [];
 
-        switch (activeURLPageType) {
+        switch (activePageType) {
             case ("home_page"): {
                 validPageTypes = [
                     "visualisation",
@@ -401,7 +376,7 @@ var createController = {
                     validPageOptions[index].valid = true;
                 }
 
-                if (validPageOptions[index].id === activeURLPageType) {
+                if (validPageOptions[index].id === activePageType) {
                     validPageOptions[index].active = true;
                 }
 

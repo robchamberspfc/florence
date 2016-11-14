@@ -1,7 +1,7 @@
 
 var editView = require('workspace/edit/editView.js'),
     workspaceState = require('shared/state/workspaceState'),
-    getPage = require('shared/api/getPage');
+    getActivePage = require('shared/api/getActivePage');
 
 var editController = {
 
@@ -9,7 +9,7 @@ var editController = {
 
         if ($.isEmptyObject(workspaceState.editorData.get())) {
             // No current editorData, get data for activeURL from API and re-run this initialisation
-            getPage().then(function(pageData) {
+            getActivePage().then(function(pageData) {
                 workspaceState.editorData.set(pageData);
                 editController.init();
             }).catch(function(error) {

@@ -13,10 +13,22 @@ var utilities = require('shared/utilities/utilities'),
 var saveNewPage = function() {
     var pageType = workspaceState.editorData.get().type,
         pageEdition = workspaceState.editorData.get().description.edition ? workspaceState.editorData.get().description.edition : "",
-        pagePath = [];
+        pagePath = [],
+        activePageType = utilities.findNodeInBrowseTreeByUri(workspaceState.activeUrl.get()).type,
+        activeURL = workspaceState.activeUrl.get().split('/'),
+        index;
+
+    // Page being created as part of a series, remove unnecessary/duplicated entries from current activeURL
+    if (activePageType === "article" || activePageType === "article_download") {
+        index = activeURL.indexOf("articles");
+        activeURL.splice(index, (activeURL.length-index));
+    } else if (activePageType === "bulletin") {
+        index = activeURL.indexOf("bulletins");
+        activeURL.splice(index, (activeURL.length-index));
+    }
 
     // Add current active location
-    pagePath.push(workspaceState.activeUrl.get());
+    pagePath = activeURL.concat(pagePath);
 
     // Add page type to path
     switch (pageType) {
