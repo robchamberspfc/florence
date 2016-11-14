@@ -81,6 +81,8 @@ var createController = {
     prePopulateInputs: function() {
         var $pageNameInput;
 
+        debugger;
+
         // Render inputs
         createController.buildInputs(activeURLPageType);
         workspaceState.editorData.set(createController.getPageModel(activeURLPageType));
@@ -153,6 +155,8 @@ var createController = {
         // Empty any existing optional inputs from DOM
         createView.inputs.empty();
 
+        debugger;
+
         // Go through array and build up new array of HTML returned for input type from view
         for (i = 0; i < inputsArrayLength; i++) {
             var inputHtml = (createView.inputHtml(inputsArray[i]));
@@ -173,6 +177,13 @@ var createController = {
                 return [];
             }
             case ("bulletin"): {
+                return [
+                    "pageName",
+                    "edition",
+                    "releaseDate"
+                ];
+            }
+            case ("article"): {
                 return [
                     "pageName",
                     "edition",
