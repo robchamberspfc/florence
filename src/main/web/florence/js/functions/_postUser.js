@@ -9,17 +9,22 @@ function postUser(name, email, password, isAdmin, isEditor, isDataVisPublisher) 
     });
 
     $.ajax({
-        url: "/zebedee/users",
+        url: "/user",
         dataType: 'json',
         contentType: 'application/json',
         type: 'POST',
         data: JSON.stringify({
-            name: name,
-            email: email
+            password: password,
+            email: email,
+            isAdmin: isAdmin,
+            isEditor: isEditor,
+            isDataVisPublisher: isDataVisPublisher
         }),
         success: function () {
             console.log('User created');
-            setPassword();
+            sweetAlert("User created", "User '" + email + "' has been created", "success");
+            viewController('users');
+
         },
         error: function (response) {
             handleUserPostError(response);
@@ -27,19 +32,6 @@ function postUser(name, email, password, isAdmin, isEditor, isDataVisPublisher) 
     });
 
     /**
-     * Once the user is created do a separate post to the zebedee API
-     * to set the password.
-     */
-    function setPassword() {
-        postPassword(
-            success = function () {
-                console.log('Password set');
-                setPermissions();
-            },
-            error = null,
-            email,
-            password);
-    }
 
     /**
      * Once the user is created and the password is set, set the permissions for the user.

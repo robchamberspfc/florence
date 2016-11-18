@@ -8,12 +8,12 @@
  */
 function postPassword(success, error, email, password, oldPassword) {
   $.ajax({
-    url: "/zebedee/password",
+    url: "/user/password",
     dataType: 'json',
     contentType: 'application/json',
     type: 'POST',
     data: JSON.stringify({
-      password: password,
+      newPassword: password,
       email: email,
       oldPassword: oldPassword
     }),

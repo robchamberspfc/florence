@@ -7,7 +7,7 @@
  */
 function getTeams(success, error, name) {
 
-  var url = "/zebedee/teams";
+  var url = "/team";
 
   if(name) {
     url += '/' + name;

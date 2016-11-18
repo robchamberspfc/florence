@@ -39,10 +39,14 @@ public class Proxy implements Filter {
 
     private static final String florenceToken = "/florence";
     private static final String zebedeeToken = "/zebedee";
+    private static final String userToken = "/user";
+    private static final String teamToken = "/team";
     private static final String X_REQUEST_ID_KEY = "X-Request-Id";
 
     private static final String babbageBaseUrl = getBabbageUrl();
     private static final String zebedeeBaseUrl = Configuration.getZebedeeUrl();
+    private static final String userBaseUrl = "http://localhost:8080/user";
+    private static final String teamBaseUrl = "http://localhost:8090/team";
 
     private static final List<String> florencePaths = Arrays.asList("");
 
@@ -63,6 +67,15 @@ public class Proxy implements Filter {
             if (requestUri.startsWith(zebedeeToken)) {
                 requestUri = requestUri.replace(zebedeeToken, "");
                 requestBaseUrl = zebedeeBaseUrl;
+            }
+
+            if (requestUri.startsWith(userToken)) {
+                requestUri = requestUri.replace(userToken, "");
+                requestBaseUrl = userBaseUrl;
+            }
+            if (requestUri.startsWith(teamToken)) {
+                requestUri = requestUri.replace(teamToken, "");
+                requestBaseUrl = teamBaseUrl;
             }
 
             HttpRequestBase proxyRequest;

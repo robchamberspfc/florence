@@ -1,6 +1,6 @@
 function deleteUser(email) {
   $.ajax({
-    url: "/zebedee/users?email=" + email,
+    url: "/user/" + email + "/",
     dataType: 'json',
     contentType: 'application/json',
     type: 'DELETE',

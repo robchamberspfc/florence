@@ -6,7 +6,7 @@
  */
 function postLogin(email, password) {
     $.ajax({
-        url: "/zebedee/login",
+        url: "/user/authenticate",
         dataType: 'json',
         contentType: 'application/json',
         crossDomain: true,
@@ -16,7 +16,7 @@ function postLogin(email, password) {
             password: password
         }),
         success: function (response) {
-            document.cookie = "access_token=" + response + ";path=/";
+            document.cookie = "access_token=" + response.id + ";path=/";
             localStorage.setItem("loggedInAs", email);
             getUserPermission(
                 function (permission) {

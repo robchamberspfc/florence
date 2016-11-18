@@ -7,7 +7,7 @@
  */
 function getUsers(success, error, userId) {
 
-  var url = "/zebedee/users";
+  var url = "/user";
 
   if(userId) {
     url += '?email=' + userId;

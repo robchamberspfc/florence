@@ -7,7 +7,7 @@
  */
 function getUserPermission(success, error, userId) {
 
-  var url = "/zebedee/permission?email=" + userId;
+  var url = "/user/" + userId + "/permissions";
 
 
   return $.ajax({
