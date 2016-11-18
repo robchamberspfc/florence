@@ -286,6 +286,7 @@ function renderAccordionSections(collectionId, pageData, isPageComplete) {
         addFile(collectionId, pageData, 'downloads', 'file');
         renderRelatedItemAccordionSection(collectionId, pageData, templateData, 'relatedDocuments', 'document');
         renderRelatedItemAccordionSection(collectionId, pageData, templateData, 'relatedDatasets', 'dataset');
+        renderExternalLinkAccordionSection(collectionId, pageData, 'links', 'link');
         accordion();
         qmiEditor(collectionId, pageData);
     }
@@ -359,6 +360,7 @@ function renderAccordionSections(collectionId, pageData, isPageComplete) {
         renderRelatedItemAccordionSection(collectionId, pageData, templateData, 'relatedDocuments', 'document');
         renderRelatedItemAccordionSection(collectionId, pageData, templateData, 'relatedMethodology', 'qmi');
         renderRelatedItemAccordionSection(collectionId, pageData, templateData, 'relatedMethodologyArticle', 'methodology');
+        renderExternalLinkAccordionSection(collectionId, pageData, 'links', 'link');
         editTopics(collectionId, pageData, templateData, 'topics', 'topics');
         editAlert(collectionId, pageData, templateData, 'alerts', 'alert');
         accordion();
