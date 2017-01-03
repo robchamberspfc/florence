@@ -1,7 +1,6 @@
 
 /* Imports */
 var Redux = require('redux');
-    watch = require('redux-watch');
 
 /* Create store */
 var createStore = Redux.createStore,

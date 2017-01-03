@@ -27,3 +27,4 @@ src/main/web/florence/assets/js/bundle.js
 src/main/web/florence/assets/css/*
 src/main/web/florence/assets/js/main.js
 src/main/web/florence/assets/js/templates.js
+/src/main/web/florence/.tmp/
