@@ -21,6 +21,15 @@ module.exports = {
                     helperDirs: [__dirname + "/app/shared/templateHelpers"],
                     compat: ''
                 }
+            },
+            {
+                test: /\.js$/,
+                exclude: /(node_modules|assets)/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['es2015'],
+                    cacheDirectory: true
+                }
             }
         ],
         noParse: [
