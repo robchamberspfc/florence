@@ -1,14 +1,9 @@
 const Redux = require('redux');
 
 /* Reducer */
-function florence(state, action) {
-    // Set initial state
-    if (state === undefined) {
-        state = initialState;
-    }
-
+function florence(state = initialState, action) {
     // Parse to string, clone and parse back to object to keep original state immutable
-    var newState = JSON.parse(JSON.stringify(state));
+    let newState = JSON.parse(JSON.stringify(state));
 
     // Reducer switch function, updates the state as necessary
     switch (action.type) {
