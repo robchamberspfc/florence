@@ -1,33 +1,6 @@
+const Redux = require('redux');
 
-/* Imports */
-var Redux = require('redux');
-
-/* Create store */
-var createStore = Redux.createStore,
-    initialState = {
-        baseUrl: "",
-        user: {
-            email: "",
-            hasSession: false,
-            sessonExpiryDate: "",
-            type: ""
-        },
-        activeView: {
-            name: "editor"
-        },
-        workspace: {
-            collectionData: {},
-            browseTreeData: {},
-            activeScreen: "",
-            activeUrl: "",
-            previewUrl: "",
-            language: "english",
-            isDirty: false,
-            editorData: {}
-        }
-    },
-    store = createStore(florence);
-
+/* Reducer */
 function florence(state, action) {
     // Set initial state
     if (state === undefined) {
@@ -84,12 +57,33 @@ function florence(state, action) {
         }
     }
 
-    console.log('ACTION: ', action);
-    console.log('OLD STATE: ', state);
-    console.log('NEW STATE: ', newState);
-    console.log('--------');
-
     return newState
 }
+
+/* Create store */
+const createStore = Redux.createStore;
+const initialState = {
+        baseUrl: "",
+        user: {
+            email: "",
+            hasSession: false,
+            sessonExpiryDate: "",
+            type: ""
+        },
+        activeView: {
+            name: "editor"
+        },
+        workspace: {
+            collectionData: {},
+            browseTreeData: {},
+            activeScreen: "",
+            activeUrl: "",
+            previewUrl: "",
+            language: "english",
+            isDirty: false,
+            editorData: {}
+        }
+    };
+const store = createStore(florence, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 module.exports = store;
