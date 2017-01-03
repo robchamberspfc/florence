@@ -70,10 +70,6 @@ var browseController = {
                 browseView.selectDirectories($this);
                 browseView.scrollSelectedItemIntoView($this);
             }
-
-            if (userState.type.isPublisher()) {
-                // TODO update iframe to new URL
-            }
         });
     },
 

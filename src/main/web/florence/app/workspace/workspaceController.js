@@ -32,6 +32,7 @@ var workspaceController = {
     },
 
     bindWorkspaceExit: function() {
+        //TODO this should be controlled by state, not DOM click
         $('.js-nav-item').off().click(function() {
             workspaceController.cancelStateSubscriptions();
         });
@@ -58,11 +59,11 @@ var workspaceController = {
                     return;
                 }
 
-                // If browse already showing, update to new node
-                if (workspaceState.activeScreen.get() === "browse") {
-                    browseController.selectBrowseNodeByUrl(newUrl);
+                // Browse already displayed, update preview (if necessary) and tree
+                if (newUrl !== previewController.getPreviewUri()) {
                     previewController.updatePreview(newUrl);
                 }
+                browseController.selectBrowseNodeByUrl(newUrl);
             }
 
             var unsubscribe = workspaceState.activeUrl.watch(updateWorkspace);

@@ -11,8 +11,11 @@ var previewController = {
     },
 
     catchPreviewOnUnload: function() {
-        window.addEventListener("message", function () {
-            previewController.handlePreviewChange();
+        window.addEventListener("message", function (event) {
+            // Only handle messages from babbage (they have the body "load" in the message)
+            if (event.data === "load") {
+                previewController.handlePreviewChange();
+            }
         });
     },
 
