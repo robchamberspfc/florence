@@ -11,8 +11,8 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"os"
-	"time"
 	"strings"
+	"time"
 )
 
 var BindAddr = ":8081"
@@ -99,10 +99,41 @@ func createReverseProxy(proxyURL *url.URL) http.Handler {
 	return proxy
 }
 
+type transport struct {
+	http.RoundTripper
+}
+
+func (t *transport) RoundTrip(req *http.Request) (resp *http.Response, err error) {
+	/* May need this to handle location later
+
+	resp, err = t.RoundTripper.RoundTrip(req)
+	if err != nil {
+		return nil, err
+	}
+	b, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	err = resp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+	b = bytes.Replace(b, []byte("server"), []byte("schmerver"), -1)
+	body := ioutil.NopCloser(bytes.NewReader(b))
+	resp.Body = body
+	resp.ContentLength = int64(len(b))
+	resp.Header.Set("Content-Length", strconv.Itoa(len(b)))
+	return resp, nil */
+
+	return t.RoundTripper.RoundTrip(req)
+}
+
+var _ http.RoundTripper = &transport{}
+
 func createZebedeeReverseProxy(proxyURL *url.URL) http.Handler {
 	proxy := httputil.NewSingleHostReverseProxy(proxyURL)
 	director := proxy.Director
-	proxy.Transport = &http.Transport{
+	proxy.Transport = &transport{&http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		DialContext: (&net.Dialer{
 			Timeout:   5 * time.Second,
@@ -112,7 +143,7 @@ func createZebedeeReverseProxy(proxyURL *url.URL) http.Handler {
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   5 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
-	}
+	}}
 	proxy.Director = func(req *http.Request) {
 		if c, err := req.Cookie(`access_token`); err == nil && len(c.Value) > 0 {
 			req.Header.Set(`X-Florence-Token`, c.Value)
