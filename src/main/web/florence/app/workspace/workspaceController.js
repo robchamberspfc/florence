@@ -41,11 +41,11 @@ var workspaceController = {
     updateWorkspace: {
 
         onActiveScreenStateUpdate: function() {
-            function renderNewScreen(newScreen) {
+            function updateWorkspace(newScreen) {
                 workspaceController.renderActiveScreen(newScreen);
             }
 
-            var unsubscribe = workspaceState.activeScreen.watch(renderNewScreen);
+            var unsubscribe = workspaceState.activeScreen.watch(updateWorkspace);
 
             workspaceController.stateSubscriptions.push(unsubscribe);
         },
@@ -54,10 +54,10 @@ var workspaceController = {
 
             function updateWorkspace(newUrl) {
                 // Switch to browse screen if active url changes on creator or editor
-                if (workspaceState.activeScreen.get() === "create" || workspaceState.activeScreen.get() === "edit") {
-                    workspaceState.activeScreen.set('browse');
-                    return;
-                }
+                // if (workspaceState.activeScreen.get() === "create" || workspaceState.activeScreen.get() === "edit") {
+                //     workspaceState.activeScreen.set('browse');
+                //     return;
+                // }
 
                 // Browse already displayed, update preview (if necessary) and tree
                 if (newUrl !== previewController.getPreviewUri()) {

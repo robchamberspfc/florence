@@ -1,0 +1,52 @@
+/* DROP-DOWN/ACCORDION SECTION IN EDITOR SCREEN */
+
+.editor-accordion {
+    margin: $lineheight $gutter 0 $gutter;
+    overflow: hidden;
+
+    &__heading {
+        margin: 0;
+        padding: $lineheight $gutter;
+        background: $pickled-bluewood;
+        color: $porcelain;
+        position: relative;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            top: $lineheight;
+            right: $gutter;
+            background-color: transparent;
+            border-top: 10px solid $quill-gray;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+        }
+
+        &.active:before {
+            border-top: 0 solid transparent;
+            border-bottom: 10px solid $quill-gray;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+        }
+    }
+
+    &__body {
+        background: $slate-gray;
+        padding: $lineheight $gutter;
+        display: none;
+    }
+
+    &__item {
+        color: $mirage;
+        background: $cadet-blue;
+        padding: ($lineheight/2) ($gutter/2);
+        margin: ($lineheight/2) 0;
+    }
+
+}

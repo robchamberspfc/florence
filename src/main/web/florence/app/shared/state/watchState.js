@@ -21,7 +21,7 @@ var watchStore = function(stateProperty, onChange) {
         currentValue = getValue(store.getState(), stateProperty);
 
         if (previousValue !== currentValue) {
-            onChange(currentValue);
+            onChange(currentValue, previousValue);
             console.log(stateProperty + ' changed from "',previousValue,'" to "',currentValue,'"');
         }
     }

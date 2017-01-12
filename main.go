@@ -1,16 +1,19 @@
 package main
 
 import (
+	"./assets"
 	"github.com/ONSdigital/go-ns/handlers/requestID"
 	"github.com/ONSdigital/go-ns/handlers/timeout"
 	"github.com/ONSdigital/go-ns/log"
 	"github.com/gorilla/pat"
 	"github.com/justinas/alice"
+	"mime"
 	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -57,6 +60,7 @@ func main() {
 	zebedeeProxy := createZebedeeReverseProxy(zebedeeURL)
 
 	router.Handle("/zebedee/{uri:.*}", zebedeeProxy)
+	router.HandleFunc("/florence/{uri:.*}", staticFiles)
 	router.Handle("/{uri:.*}", babbageProxy)
 
 	log.Debug("Starting server", log.Data{
@@ -76,6 +80,21 @@ func main() {
 		log.Error(err, nil)
 		os.Exit(2)
 	}
+}
+
+func staticFiles(w http.ResponseWriter, req *http.Request) {
+	path := req.URL.Query().Get(":uri")
+
+	b, err := assets.Asset("../src/main/web/florence/" + path)
+	if err != nil {
+		log.Error(err, nil)
+		w.WriteHeader(404)
+		return
+	}
+
+	w.Header().Set(`Content-Type`, mime.TypeByExtension(filepath.Ext(path)))
+	w.WriteHeader(200)
+	w.Write(b)
 }
 
 func createReverseProxy(proxyURL *url.URL) http.Handler {

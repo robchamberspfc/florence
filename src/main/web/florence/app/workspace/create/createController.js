@@ -41,6 +41,7 @@ var createController = {
 
             saveNewPage().then(function(newPageURI) {
                 workspaceState.activeUrl.set(newPageURI);
+                workspaceState.activeScreen.set("edit");
             }).catch(function(error) {
                 console.log("Error saving new page \n", error);
             });
