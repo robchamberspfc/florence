@@ -27,6 +27,10 @@ function florence(state = initialState, action) {
             newState.workspace.activeUrl = action.activeUrl;
             break;
         }
+        case ("UPDATE_WORKSPACE_PREVIEW_URL"): {
+            newState.workspace.activeUrl = action.previewUrl;
+            break;
+        }
         case ("UPDATE_COLLECTION_DATA"): {
             newState.workspace.collectionData = action.collectionData;
             break;

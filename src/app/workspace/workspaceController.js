@@ -15,7 +15,11 @@ var workspaceController = {
         this.updateWorkspace.onActiveScreenStateUpdate();
         this.updateWorkspace.onActiveUrlStateUpdate();
         this.bindWorkspaceExit();
-        workspaceState.activeScreen.set('browse');
+        previewController.init();
+
+        if (workspaceState.activeScreen.get().length <= 0) {
+            workspaceState.activeScreen.set('browse');
+        }
     },
 
     // Array of all state observations for the workspace so that they can be cancelled when leaving the workspace (or else it's end up being observed multiple times)
@@ -54,10 +58,10 @@ var workspaceController = {
 
             function updateWorkspace(newUrl) {
                 // Switch to browse screen if active url changes on creator or editor
-                // if (workspaceState.activeScreen.get() === "create" || workspaceState.activeScreen.get() === "edit") {
-                //     workspaceState.activeScreen.set('browse');
-                //     return;
-                // }
+                if (workspaceState.activeScreen.get() === "create" || workspaceState.activeScreen.get() === "edit") {
+                    workspaceState.activeScreen.set('browse');
+                    return;
+                }
 
                 // Browse already displayed, update preview (if necessary) and tree
                 if (newUrl !== previewController.getPreviewUri()) {
@@ -80,7 +84,6 @@ var workspaceController = {
                 // console.log('Render browse workspace');
                 navigationController.changeActiveItem(activeScreen);
                 browseController.init();
-                previewController.init();
                 break;
             }
             case ('create'): {
@@ -93,7 +96,6 @@ var workspaceController = {
                 // console.log('Render edit workspace');
                 navigationController.changeActiveItem(activeScreen);
                 editController.init();
-                previewController.init();
                 break;
             }
             default: {

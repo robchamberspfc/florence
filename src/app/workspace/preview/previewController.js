@@ -6,7 +6,8 @@ var previewView = require('workspace/preview/previewView'),
 var previewController = {
 
     init: function () {
-        previewView.render(baseUrlState.get());
+        const url = baseUrlState.get() + workspaceState.activeUrl.get();
+        previewView.render(url);
         this.catchPreviewOnUnload();
     },
 
@@ -20,8 +21,9 @@ var previewController = {
     },
 
     handlePreviewChange: function() {
-        var newPreviewUri = this.getPreviewUri();
+        const newPreviewUri = this.getPreviewUri();
         workspaceState.activeUrl.set(newPreviewUri);
+        workspaceState.previewU.set(newPreviewUri);
     },
 
     refreshPreview: function() {

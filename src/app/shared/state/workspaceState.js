@@ -61,6 +61,24 @@ var workspaceState = {
         }
     },
 
+    previewUrl: {
+
+        get: function() {
+            return store.getState().workspace.previewUrl;
+        },
+
+        set: function(previewUrl) {
+            store.dispatch({
+                type: "UPDATE_WORKSPACE_PREVIEW_URL",
+                previewUrl: previewUrl
+            })
+        },
+
+        watch: function(onChange) {
+            return watchState('workspace.previewUrl', onChange);
+        }
+    },
+
     isDirty: {
 
         get: function() {
