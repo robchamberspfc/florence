@@ -10,6 +10,7 @@
         background: $pickled-bluewood;
         color: $porcelain;
         position: relative;
+        z-index: 1; // Or else opacity:0.5 on 'new' button brings it ahead of it in the stack
 
         &:hover {
             cursor: pointer;
