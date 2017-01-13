@@ -85,7 +85,7 @@ func main() {
 func staticFiles(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.Query().Get(":uri")
 
-	b, err := assets.Asset("../src/main/web/florence/" + path)
+	b, err := assets.Asset("../src/" + path)
 	if err != nil {
 		log.Error(err, nil)
 		w.WriteHeader(404)

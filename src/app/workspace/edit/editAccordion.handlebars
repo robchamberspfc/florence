@@ -1,0 +1,15 @@
+<div class="editor-accordion" id="{{id}}">
+    <h2 class="editor-accordion__heading js-editor-accordion__heading">{{heading}}</h2>
+    <div class="editor-accordion__body js-editor-accordion__body">
+        <ul class="list list--neutral">
+            {{#each items}}
+                <li class="editor-accordion__item">
+                    {{itemHTML}}
+                </li>
+            {{/each}}
+        </ul>
+        <div class="text-center">
+            <button class="btn btn--subtle">New {{itemName}}</button>
+        </div>
+    </div>
+</div>
