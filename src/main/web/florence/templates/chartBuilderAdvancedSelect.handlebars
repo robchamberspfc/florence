@@ -1,15 +1,24 @@
-                            {{#if_eq chartType 'line'}}
-                            {{#select highlight}}
-                                <option value="0">No Highlight</option>
-                            {{#each series}}
-                                <option value="{{this}}">{{this}}</option>
-                            {{/each}}
-                            {{/select}}
-                            {{else}}
-                            {{#select highlight}}
-                                <option value="0">No Highlight</option>
-                            {{#each categories}}
-                                <option value="{{this}}">{{this}}</option>
-                            {{/each}}
-                            {{/select}}
-                            {{/if_eq}}
+{{#if_eq chartType 'line'}}
+    {{#select highlight}}
+        <option value="0">No Highlight</option>
+    {{#each series}}
+        <option value="{{this}}">{{this}}</option>
+    {{/each}}
+    {{/select}}
+{{else}}
+    {{#if_eq chartType 'small-multiples'}}
+        {{#select highlight}}
+            <option value="0">No Highlight</option>
+        {{#each series}}
+            <option value="{{this}}">{{this}}</option>
+        {{/each}}
+        {{/select}}
+    {{else}}
+        {{#select highlight}}
+            <option value="0">No Highlight</option>
+        {{#each categories}}
+            <option value="{{this}}">{{this}}</option>
+        {{/each}}
+        {{/select}}
+    {{/if_eq}}
+{{/if_eq}}
