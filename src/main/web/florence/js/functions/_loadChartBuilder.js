@@ -366,13 +366,13 @@ function loadChartBuilder(pageData, onSave, chart) {
 
     function addNotation(){
         var obj = {   
-                title: 'Annotation ' + (chart.annotations.length+1) + ': Automagic', 
+                title: 'Copy goes here', 
                 devices:{
-                    'sm':{x:200, y:150},
+                    'sm':{x:50, y:50},
                     'md':{x:50, y:50},
                     'lg':{x:50, y:50}
                 }
-                , x:250, y:70
+                , x:50, y:50
                 , isHidden:false
                 , isPlotline:false
                 , bandWidth:0
@@ -458,7 +458,7 @@ function loadChartBuilder(pageData, onSave, chart) {
 
     // Builds, parses, and renders our chart in the chart editor
     function renderChart() {
-        //TODO check we need to refresh this AGAIN!
+        // we need to refresh this AGAIN to rebuild the chart obj
         chart = buildChartObject();
 
         //set isEditor to allow annotations to be moved
@@ -569,6 +569,10 @@ function loadChartBuilder(pageData, onSave, chart) {
             itm.isPlotline = $('#is-plotline-'+idx).prop('checked');
             $('#chart-notes-'+idx).toggle(!itm.isPlotline);
 
+            itm.isHidden = $('#is-hidden-'+idx).prop('checked');
+            itm.orientation = $('#orientation-axis-'+idx).val();
+            itm.bandWidth = parseFloat( $('#band-width-'+idx).val() ).toFixed(2);
+
             if(!itm.isPlotline){
 
                 var text = $('#chart-notes-'+idx).val();
@@ -584,9 +588,11 @@ function loadChartBuilder(pageData, onSave, chart) {
                 itm.width = parseInt( maxLength * 6.5) + 6 ;
                 itm.height = (lines.length+1)*12 + 10;
                 }
-
+                // update annotaion accordian
+                $('#annotation-'+idx+' .accordian__title').html('Note: ' + itm.title.substr(0,20)+'&hellip;')
             }else{
                 itm.title = '';
+                $('#annotation-'+idx+' .accordian__title').html('Plot line (' + itm.orientation +')');
             }
 
             itm.id = idx;
@@ -594,15 +600,12 @@ function loadChartBuilder(pageData, onSave, chart) {
             itm.x = ( itm.devices[chart.device].x );
             itm.y = ( itm.devices[chart.device].y );
 
-            itm.isHidden = $('#is-hidden-'+idx).prop('checked');
-            itm.orientation = $('#orientation-axis-'+idx).val();
-            itm.bandWidth = parseFloat( $('#band-width-'+idx).val() ).toFixed(2);
-
             if(isNaN(itm.bandWidth))itm.bandWidth = 0;
             if(parseFloat(itm.bandWidth)===0){
                 itm.isPlotband = false;
             }else{
                 itm.isPlotband = true;
+                $('#annotation-'+idx+' .accordian__title').html('Plot band (' + itm.orientation +')');
             }
 
         });
