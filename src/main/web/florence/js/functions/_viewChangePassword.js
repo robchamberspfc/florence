@@ -3,11 +3,17 @@
  * @param email - The email address of the user to change the password for.
  * @param authenticate - true if the existing password for the user needs to be entered.
  */
-function viewChangePassword(email, authenticate) {
-
+function viewChangePassword(email, authenticate, token) {
   var viewModel = {
-    authenticate: authenticate
+    authenticate: authenticate,
   };
+  if(token) {
+    viewModel.token = token;
+  }
+  var loginEmail = email;
+  if(loginEmail.match(/^\<verify\>:/)) {
+    loginEmail = loginEmail.replace(/^\<verify\>:/, "");
+  }
   
   $('body').append(templates.changePassword(viewModel));
 
@@ -17,6 +23,10 @@ function viewChangePassword(email, authenticate) {
     var oldPassword = $('#password-old').val();
     var newPassword = $('#password-new').val();
     var confirmPassword = $('#password-confirm').val();
+
+    if(token) {
+      oldPassword = token;
+    }
 
     if(newPassword !== confirmPassword) {
       sweetAlert('The passphrases provided do not match', 'Please enter the new passphrase again and confirm it.');
@@ -41,7 +51,7 @@ function viewChangePassword(email, authenticate) {
         $('.change-password-overlay').stop().fadeOut(200).remove();
 
         if(authenticate) {
-          postLogin(email, newPassword);
+          postLogin(loginEmail, newPassword, true);
         }
       },
       error = function (response) {

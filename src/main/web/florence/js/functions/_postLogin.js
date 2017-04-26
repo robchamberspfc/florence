@@ -4,7 +4,7 @@
  * @param password - the password of the user
  * @returns {boolean}
  */
-function postLogin(email, password) {
+function postLogin(email, password, redir) {
     $.ajax({
         url: "/zebedee/login",
         dataType: 'json',
@@ -18,6 +18,10 @@ function postLogin(email, password) {
         success: function (response) {
             document.cookie = "access_token=" + response + ";path=/";
             localStorage.setItem("loggedInAs", email);
+            if(redir) {
+                window.location = window.location.href.split("?")[0];
+                return;
+            }
             getUserPermission(
                 function (permission) {
                     // Only allow access to editors and admin
@@ -40,7 +44,11 @@ function postLogin(email, password) {
         },
         error: function (response) {
             if (response.status === 417) {
-                viewChangePassword(email, true);
+                if(email.match(/^\<verify\>:/)) {
+                    viewChangePassword(email, true, password);
+                } else {
+                    viewChangePassword(email, true);
+                }
             } else {
                 handleLoginApiError(response);
             }
