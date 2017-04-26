@@ -51,7 +51,11 @@ function viewChangePassword(email, authenticate, token) {
         $('.change-password-overlay').stop().fadeOut(200).remove();
 
         if(authenticate) {
-          postLogin(loginEmail, newPassword, true);
+          var redir = false;
+          if(loginEmail != email) {
+            redir = true;
+          }
+          postLogin(loginEmail, newPassword, redir);
         }
       },
       error = function (response) {

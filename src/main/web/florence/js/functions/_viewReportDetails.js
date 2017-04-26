@@ -12,7 +12,7 @@ function viewReportDetails(collection, isPublished, $this) {
 
     // get the event details
     $.ajax({
-        url: "/zebedee/collectionHistory/" + collection.id,
+        url: "/zebedee/collection/" + collection.id + "/history",
         type: "get",
         crossDomain: true,
         success: function (events) {

@@ -14,7 +14,7 @@ function getCollection(collectionId, success, error) {
 
 function getCollectionDetails(collectionId, success, error) {
   return $.ajax({
-    url: "/zebedee/collectionDetails/" + collectionId,
+    url: "/zebedee/collections/" + collectionId,
     dataType: 'json',
     type: 'GET',
     success: function (response) {
