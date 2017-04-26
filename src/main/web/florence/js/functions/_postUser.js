@@ -1,4 +1,4 @@
-function postUser(name, email, password, isAdmin, isEditor, isDataVisPublisher) {
+function postUser(name, email, isAdmin, isEditor, isDataVisPublisher) {
 
     var html = templates.loadingAnimation({dark: true, large: true});
     sweetAlert({
@@ -15,48 +15,22 @@ function postUser(name, email, password, isAdmin, isEditor, isDataVisPublisher) 
         type: 'POST',
         data: JSON.stringify({
             name: name,
-            email: email
+            email: email,
+            permissions: {
+                admin: isAdmin,
+                editor: isEditor,
+                dataVisPublisher: isDataVisPublisher
+            }
         }),
         success: function () {
             console.log('User created');
-            setPassword();
+            sweetAlert("User created", "User '" + email + "' has been created", "success");
+            viewController('users');
         },
         error: function (response) {
             handleUserPostError(response);
         }
     });
-
-    /**
-     * Once the user is created do a separate post to the zebedee API
-     * to set the password.
-     */
-    function setPassword() {
-        postPassword(
-            success = function () {
-                console.log('Password set');
-                setPermissions();
-            },
-            error = null,
-            email,
-            password);
-    }
-
-    /**
-     * Once the user is created and the password is set, set the permissions for the user.
-     */
-    function setPermissions() {
-        postPermission(
-            success = function () {
-                sweetAlert("User created", "User '" + email + "' has been created", "success");
-                viewController('users');
-            },
-            error = null,
-            email = email,
-            admin = isAdmin,
-            editor = isEditor,
-            dataVisPublisher = isDataVisPublisher
-            );
-    }
 
     /**
      * Handle error response from creating the user.
